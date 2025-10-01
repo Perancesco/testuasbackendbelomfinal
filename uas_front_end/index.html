@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ensiklopedia Hewan Langka Indonesia</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="hero-section">
+    <header class="main-header">
+      <div class="header-title">
+        <h1>Ensiklopedia Hewan</h1>
+      </div>
+            <div class="header-controls">
+        <span id="theme-status"></span>
+        <button id="theme-toggle-btn" class="theme-toggle-btn">☀️</button>
+      </div>
+    </header> 
+            
+    <div class="hero-content">
+      <button class="cta-button" onclick="scrollToFilter()">Mulai Jelajah</button>
+    </div>
+    <a href="#filter-container" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
+  </div>
+    <div class="filter-container" id="filter-container">
+        <button id="add-animal-btn" class="filter-btn"><span>+</span> Tambah Hewan</button>
+        <input type="search" id="search-box" placeholder="Cari nama hewan...">
+        <select id="sort-box" class="filter-btn">
+            <option value="default">Urutkan berdasarkan...</option>
+            <option value="nama-asc">Nama (A-Z)</option>
+            <option value="nama-desc">Nama (Z-A)</option>
+            <option value="populasi-asc">Populasi (Terkecil)</option>
+            <option value="populasi-desc">Populasi (Terbesar)</option>
+            <option value="tahun-desc">Tahun Dicatat (Terbaru)</option>
+            <option value="tahun-asc">Tahun Dicatat (Terlama)</option>
+        </select>
+        <button id="filter-favorit" class="filter-btn"><span>★</span> Tampilkan Favorit</button>
+    </div>
+
+    <main id="animal-container" class="container">
+    </main>
+
+    <div id="detail-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="create-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Tambah Hewan Baru</h2>
+            <form id="create-form">
+                <input type="text" name="nama" placeholder="Nama Hewan" required>
+                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
+                <input type="text" name="lokasi" placeholder="Lokasi">
+                <select name="statusKonservasi" required>
+                    <option value="" disabled selected>Pilih Status Konservasi</option>
+                    <option value="Kritis">Kritis</option>
+                    <option value="Terancam">Terancam</option>
+                    <option value="Rentan">Rentan</option>
+                    <option value="Hampir Terancam">Hampir Terancam</option>
+                    <option value="Aman">Aman</option>
+                    <option value="Tidak Diketahui">Tidak Diketahui</option>
+                </select>
+                <textarea name="deskripsi" placeholder="Deskripsi"></textarea>
+                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan kearifan lokal"></textarea>
+                <input type="text" name="gambarUrl" placeholder="URL Gambar (opsional)">
+                <label for="gambarFile">Atau Pilih File Gambar:</label>
+                <input type="file" name="gambarFile" id="gambarFile" accept="image/*">
+                <input type="text" name="populasi" placeholder="Populasi">
+                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
+                <input type="text" name="kebiasaanUnik" placeholder="Kebiasaan Unik">
+                <input type="text" name="makanan" placeholder="Makanan">
+                <select name="tipeMakanan" required>
+                    <option value="" disabled selected>Pilih Tipe Makanan</option>
+                    <option value="Herbivora">Herbivora</option>
+                    <option value="Karnivora">Karnivora</option>
+                    <option value="Omnivora">Omnivora</option>
+                </select>
+                <button type="submit">Simpan</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Edit Hewan</h2>
+            <form id="edit-form">
+                <input type="hidden" name="originalNamaIlmiah">
+                <input type="text" name="nama" placeholder="Nama Hewan" required>
+                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
+                <input type="text" name="lokasi" placeholder="Lokasi">
+                <select name="statusKonservasi" required>
+                    <option value="" disabled selected>Pilih Status Konservasi</option>
+                    <option value="Kritis">Kritis</option>
+                    <option value="Terancam">Terancam</option>
+                    <option value="Rentan">Rentan</option>
+                    <option value="Hampir Terancam">Hampir Terancam</option>
+                    <option value="Aman">Aman</option>
+                    <option value="Tidak Diketahui">Tidak Diketahui</option>
+                </select>
+                <textarea name="deskripsi" placeholder="Deskripsi"></textarea>
+                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan kearifan lokal"></textarea>
+                <input type="text" name="gambarUrl" placeholder="URL Gambar (opsional)">
+                <label for="editGambarFile">Atau Pilih File Gambar:</label>
+                <input type="file" name="gambarFile" id="editGambarFile" accept="image/*">
+                <input type="text" name="populasi" placeholder="Populasi">
+                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
+                <input type="text" name="kebiasaanUnik" placeholder="Kebiasaan Unik">
+                <input type="text" name="makanan" placeholder="Makanan">
+                <select name="tipeMakanan" required>
+                    <option value="" disabled selected>Pilih Tipe Makanan</option>
+                    <option value="Herbivora">Herbivora</option>
+                    <option value="Karnivora">Karnivora</option>
+                    <option value="Omnivora">Omnivora</option>
+                </select>
+                <button type="submit">Simpan Perubahan</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Proyek Tugas oleh Francesco Alexander</p>
+    </footer>
+
+    <div class="scroll-buttons">
+        <button id="scrollTopBtn" class="scroll-btn">⭡</button>
+        <button id="scrollBottomBtn" class="scroll-btn">⭣</button>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
