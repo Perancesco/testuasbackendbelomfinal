@@ -6,44 +6,32 @@
     <title>Ensiklopedia Hewan Langka Indonesia</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="hero-section">
-    <header class="main-header">
-      <div class="header-title">
-        <h1>Ensiklopedia Hewan</h1>
-      </div>
-            <div class="header-controls">
-        <span id="theme-status"></span>
-        <button id="theme-toggle-btn" class="theme-toggle-btn">☀️</button>
-      </div>
-    </header> 
-            
-    <div class="hero-content">
-      <button class="cta-button" onclick="scrollToFilter()">Mulai Jelajah</button>
+    <div class="hero-section" id="hero-section">
+        <div class="hero-slider-container" id="hero-slider-container"></div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <h2 id="hero-title" class="hero-title"></h2>
+            <p id="hero-subtitle" class="hero-subtitle"></p>
+            <button class="cta-button" onclick="scrollToCarousel()">Mulai Jelajah</button>
+        </div>
+        <button id="hero-prev-btn" class="hero-nav-btn prev">⮜</button>
+        <button id="hero-next-btn" class="hero-nav-btn next">⮞</button>
+        <a href="#animal-container-wrapper" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
     </div>
-    <a href="#filter-container" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
-  </div>
-    <div class="filter-container" id="filter-container">
-        <button id="add-animal-btn" class="filter-btn"><span>+</span> Tambah Hewan</button>
-        <input type="search" id="search-box" placeholder="Cari nama hewan...">
-        <select id="sort-box" class="filter-btn">
-            <option value="default">Urutkan berdasarkan...</option>
-            <option value="nama-asc">Nama (A-Z)</option>
-            <option value="nama-desc">Nama (Z-A)</option>
-            <option value="populasi-asc">Populasi (Terkecil)</option>
-            <option value="populasi-desc">Populasi (Terbesar)</option>
-            <option value="tahun-desc">Tahun Dicatat (Terbaru)</option>
-            <option value="tahun-asc">Tahun Dicatat (Terlama)</option>
-        </select>
-        <button id="filter-favorit" class="filter-btn"><span>★</span> Tampilkan Favorit</button>
+    
+    <div class="slider-wrapper" id="animal-container-wrapper">
+        <h2 class="section-title">Ensiklopedia</h2>
+        <main id="animal-container" class="container">
+        </main>
+        <button id="prev-btn" class="slider-nav-btn prev">⮜</button>
+        <button id="next-btn" class="slider-nav-btn next">⮞</button>
     </div>
-
-    <main id="animal-container" class="container">
-    </main>
 
     <div id="detail-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
@@ -51,7 +39,7 @@
             <div id="modal-body"></div>
         </div>
     </div>
-
+    
     <div id="create-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <button class="close-btn">&times;</button>
