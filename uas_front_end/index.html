@@ -6,7 +6,7 @@
     <title>Ensiklopedia Hewan Langka Indonesia</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,6 @@
     <div class="hero-section" id="hero-section">
         <div class="hero-slider-container" id="hero-slider-container"></div>
         <div class="hero-overlay"></div>
-        
         <div class="hero-content">
             <h2 id="hero-title" class="hero-title"></h2>
             <p id="hero-subtitle" class="hero-subtitle"></p>
@@ -37,100 +36,38 @@
         <h2 class="section-title">Jelajahi Habitat</h2>
         <section class="map-section container">
             <img src="penanda.png" alt="Peta Kepulauan Indonesia" class="map-image">
-            
-            <a href="https://google.com/search?q=Sumatra" target="_blank" class="map-waypoint waypoint-1" data-label="Habitat Sumatra"></a>
-            
-            <a href="https://google.com/search?q=Jawa" target="_blank" class="map-waypoint waypoint-2" data-label="Habitat Jawa"></a>
-            
-            <a href="https://google.com/search?q=Kalimantan" target="_blank" class="map-waypoint waypoint-3" data-label="Habitat Kalimantan"></a>
-            
-            <a href="https://google.com/search?q=Sulawesi" target="_blank" class="map-waypoint waypoint-4" data-label="Habitat Sulawesi"></a>
-
-            <a href="https://google.com/search?q=Nusa+Tenggara" target="_blank" class="map-waypoint waypoint-5" data-label="Habitat Nusa Tenggara"></a>
-
-            <a href="https://google.com/search?q=Papua" target="_blank" class="map-waypoint waypoint-6" data-label="Habitat Papua"></a>
-
+            <a href="https://google.com/search?q=Sumatra" target="_blank" class="map-waypoint waypoint-1" data-label="Sumatra"></a>
+            <a href="https://google.com/search?q=Jawa" target="_blank" class="map-waypoint waypoint-2" data-label="Jawa"></a>
+            <a href="https://google.com/search?q=Kalimantan" target="_blank" class="map-waypoint waypoint-3" data-label="Kalimantan"></a>
+            <a href="https://google.com/search?q=Sulawesi" target="_blank" class="map-waypoint waypoint-4" data-label=" Sulawesi"></a>
+            <a href="https://google.com/search?q=Nusa+Tenggara" target="_blank" class="map-waypoint waypoint-5" data-label="Papua"></a>
+            <a href="https://google.com/search?q=Papua" target="_blank" class="map-waypoint waypoint-6" data-label="Perairan Indonesia"></a>
+            <a href="https://google.com/search?q=Kepulauan+Maluku" target="_blank" class="map-waypoint waypoint-7" data-label="Bali"></a>
+            <a href="https://google.com/search?q=Kepulauan+Sunda+Kecil" target="_blank" class="map-waypoint waypoint-8" data-label="Nusa Tenggara"></a>
         </section>
     </div>
+
+    <div class="quiz-section-wrapper">
+        <div class="quiz-container">
+            <h2 class="section-title">Tebak Hewan!</h2>
+            <p id="quiz-question">Fakta menarik tentang hewan akan muncul di sini.</p>
+            <div id="quiz-extra-hints"></div>
+            <div id="quiz-answer" class="quiz-answer-boxes"></div>
+            <p id="quiz-feedback"></p>
+            <input type="text" id="quiz-answer-input" placeholder="Ketik jawabanmu...">
+            <div class="quiz-buttons">
+                <button id="quiz-submit-btn" class="cta-button">Tebak</button>
+                <button id="quiz-hint-btn" class="cta-button secondary">Buka Petunjuk</button>
+                <button id="quiz-show-answer-btn" class="cta-button secondary">Menyerah</button>
+                <button id="quiz-next-btn" class="cta-button hidden">Pertanyaan Berikutnya</button>
+            </div>
+        </div>
+    </div>
+
     <div id="detail-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <button class="close-btn">&times;</button>
             <div id="modal-body"></div>
-        </div>
-    </div>
-    
-    <div id="create-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-btn">&times;</button>
-            <h2>Tambah Hewan Baru</h2>
-            <form id="create-form">
-                <input type="text" name="nama" placeholder="Nama Hewan" required>
-                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
-                <input type="text" name="lokasi" placeholder="Lokasi">
-                <select name="statusKonservasi" required>
-                    <option value="" disabled selected>Pilih Status Konservasi</option>
-                    <option value="Kritis">Kritis</option>
-                    <option value="Terancam">Terancam</option>
-                    <option value="Rentan">Rentan</option>
-                    <option value="Hampir Terancam">Hampir Terancam</option>
-                    <option value="Aman">Aman</option>
-                    <option value="Tidak Diketahui">Tidak Diketahui</option>
-                </select>
-                <textarea name="deskripsi" placeholder="Deskripsi"></textarea>
-                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan kearifan lokal"></textarea>
-                <input type="text" name="gambarUrl" placeholder="URL Gambar (opsional)">
-                <label for="gambarFile">Atau Pilih File Gambar:</label>
-                <input type="file" name="gambarFile" id="gambarFile" accept="image/*">
-                <input type="text" name="populasi" placeholder="Populasi">
-                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
-                <input type="text" name="kebiasaanUnik" placeholder="Kebiasaan Unik">
-                <input type="text" name="makanan" placeholder="Makanan">
-                <select name="tipeMakanan" required>
-                    <option value="" disabled selected>Pilih Tipe Makanan</option>
-                    <option value="Herbivora">Herbivora</option>
-                    <option value="Karnivora">Karnivora</option>
-                    <option value="Omnivora">Omnivora</option>
-                </select>
-                <button type="submit">Simpan</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="edit-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-btn">&times;</button>
-            <h2>Edit Hewan</h2>
-            <form id="edit-form">
-                <input type="hidden" name="originalNamaIlmiah">
-                <input type="text" name="nama" placeholder="Nama Hewan" required>
-                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
-                <input type="text" name="lokasi" placeholder="Lokasi">
-                <select name="statusKonservasi" required>
-                    <option value="" disabled selected>Pilih Status Konservasi</option>
-                    <option value="Kritis">Kritis</option>
-                    <option value="Terancam">Terancam</option>
-                    <option value="Rentan">Rentan</option>
-                    <option value="Hampir Terancam">Hampir Terancam</option>
-                    <option value="Aman">Aman</option>
-                    <option value="Tidak Diketahui">Tidak Diketahui</option>
-                </select>
-                <textarea name="deskripsi" placeholder="Deskripsi"></textarea>
-                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan kearifan lokal"></textarea>
-                <input type="text" name="gambarUrl" placeholder="URL Gambar (opsional)">
-                <label for="editGambarFile">Atau Pilih File Gambar:</label>
-                <input type="file" name="gambarFile" id="editGambarFile" accept="image/*">
-                <input type="text" name="populasi" placeholder="Populasi">
-                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
-                <input type="text" name="kebiasaanUnik" placeholder="Kebiasaan Unik">
-                <input type="text" name="makanan" placeholder="Makanan">
-                <select name="tipeMakanan" required>
-                    <option value="" disabled selected>Pilih Tipe Makanan</option>
-                    <option value="Herbivora">Herbivora</option>
-                    <option value="Karnivora">Karnivora</option>
-                    <option value="Omnivora">Omnivora</option>
-                </select>
-                <button type="submit">Simpan Perubahan</button>
-            </form>
         </div>
     </div>
 

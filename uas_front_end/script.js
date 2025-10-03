@@ -1,7 +1,7 @@
 const heroSlidesData = [
     { video: 'videos/Gajah_Makan.mp4', judul: 'Gajah Sumatra', subjudul: 'Herbivora Lembut yang Terancam' },
     { video: 'videos/lumba_lumba.mp4', judul: 'Lumba-Lumba', subjudul: 'Kecerdasan di Kedalaman Biru' },
-    { video: 'videos/placeholder.mp4', judul: 'Video Berikutnya', subjudul: 'Jelajahi Keajaiban Lainnya' }
+    { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
 ];
 
 function scrollToCarousel() {
@@ -11,12 +11,12 @@ function scrollToCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const animalContainer = document.getElementById('animal-container');
+    // === PERBAIKAN DI BARIS INI ===
+    const animalContainer = document.getElementById('animal-container'); 
+    
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
     const closeModalBtn = modal.querySelector('.close-btn');
-    const createModal = document.getElementById('create-modal');
-    const editModal = document.getElementById('edit-modal');
     const scrollTopBtn = document.getElementById("scrollTopBtn");
     const scrollBottomBtn = document.getElementById("scrollBottomBtn");
     const prevBtn = document.getElementById('prev-btn');
@@ -26,12 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSubtitle = document.getElementById('hero-subtitle');
     const heroPrevBtn = document.getElementById('hero-prev-btn');
     const heroNextBtn = document.getElementById('hero-next-btn');
-
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const quizQuestion = document.getElementById('quiz-question');
+    const quizExtraHints = document.getElementById('quiz-extra-hints');
+    const quizAnswerContainer = document.getElementById('quiz-answer');
+    const quizAnswerInput = document.getElementById('quiz-answer-input');
+    const quizFeedback = document.getElementById('quiz-feedback');
+    const quizSubmitBtn = document.getElementById('quiz-submit-btn');
+    const quizHintBtn = document.getElementById('quiz-hint-btn');
+    const quizShowAnswerBtn = document.getElementById('quiz-show-answer-btn');
+    const quizNextBtn = document.getElementById('quiz-next-btn');
+    
     let currentIndex = 0;
     let currentlyDisplayedAnimals = [];
     let currentHeroIndex = 0;
     const itemsPerPage = 4;
+    let currentQuizAnimal = null;
+    let revealedIndexes = [];
+    let usedHintTypes = [];
 
     function createHeroSlides() {
         heroSlidesData.forEach(slideData => {
@@ -58,28 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const newActiveSlide = slides[index];
         newActiveSlide.classList.add('active');
-        newActiveSlide.play().catch(error => {
-            console.error("Video play failed:", error);
-        });
+        newActiveSlide.play().catch(error => {});
         heroTitle.textContent = heroSlidesData[index].judul;
         heroSubtitle.textContent = heroSlidesData[index].subjudul;
         currentHeroIndex = index;
     }
 
-    function nextHeroSlide() {
-        showHeroSlide((currentHeroIndex + 1) % heroSlidesData.length);
-    }
-
-    function prevHeroSlide() {
-        showHeroSlide((currentHeroIndex - 1 + heroSlidesData.length) % heroSlidesData.length);
-    }
+    function nextHeroSlide() { showHeroSlide((currentHeroIndex + 1) % heroSlidesData.length); }
+    function prevHeroSlide() { showHeroSlide((currentHeroIndex - 1 + heroSlidesData.length) % heroSlidesData.length); }
 
     function displayCarouselItems(animalArray) {
         animalContainer.innerHTML = '';
-        if (animalArray.length === 0) {
-            animalContainer.innerHTML = '<p class="not-found">Data tidak ditemukan.</p>';
-            return;
-        }
+        if (animalArray.length === 0) { animalContainer.innerHTML = '<p class="not-found">Data tidak ditemukan.</p>'; return; }
         const track = document.createElement('div');
         track.className = 'carousel-track';
         animalArray.forEach(hewan => {
@@ -88,14 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
             card.innerHTML = `
-                <div class="image-wrapper">
-                    <img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'">
-                </div>
-                <div class="card-content">
-                    <h3>${hewan.nama || ''}</h3>
-                    <p>${(hewan.deskripsi || '').substring(0, 70)}...</p>
-                </div>
-            `;
+                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
+                <div class="card-content"><h3>${hewan.nama || ''}</h3><p>${(hewan.deskripsi || '').substring(0, 70)}...</p></div>`;
             track.appendChild(card);
         });
         animalContainer.appendChild(track);
@@ -105,26 +100,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCarouselPosition() {
         const track = document.querySelector('.carousel-track');
         if (!track) return;
-        const totalItemWidthPercentage = 25.5;
-        const offset = -currentIndex * totalItemWidthPercentage;
-        track.style.transform = `translateX(${offset}%)`;
+        track.style.transform = `translateX(${-currentIndex * 25.5}%)`;
     }
 
     function showNextItem() {
         if (currentlyDisplayedAnimals.length <= itemsPerPage) return;
         currentIndex++;
-        if (currentIndex > currentlyDisplayedAnimals.length - itemsPerPage) {
-            currentIndex = 0;
-        }
+        if (currentIndex > currentlyDisplayedAnimals.length - itemsPerPage) { currentIndex = 0; }
         updateCarouselPosition();
     }
 
     function showPrevItem() {
         if (currentlyDisplayedAnimals.length <= itemsPerPage) return;
         currentIndex--;
-        if (currentIndex < 0) {
-            currentIndex = currentlyDisplayedAnimals.length - itemsPerPage;
-        }
+        if (currentIndex < 0) { currentIndex = currentlyDisplayedAnimals.length - itemsPerPage; }
         updateCarouselPosition();
     }
 
@@ -132,6 +121,122 @@ document.addEventListener('DOMContentLoaded', () => {
         currentlyDisplayedAnimals = [...dataHewan];
         currentIndex = 0; 
         displayCarouselItems(currentlyDisplayedAnimals);
+    }
+
+    function renderAnswerPlaceholders() {
+        const answer = currentQuizAnimal.nama;
+        quizAnswerContainer.innerHTML = '';
+        for (let i = 0; i < answer.length; i++) {
+            const char = answer[i];
+            const charBox = document.createElement('span');
+            if (char === ' ') {
+                charBox.className = 'letter-space';
+            } else {
+                charBox.className = 'letter-box';
+                if (revealedIndexes.includes(i)) {
+                    charBox.textContent = char;
+                }
+            }
+            quizAnswerContainer.appendChild(charBox);
+        }
+    }
+
+    function generateQuestion() {
+        currentQuizAnimal = dataHewan[Math.floor(Math.random() * dataHewan.length)];
+        revealedIndexes = [];
+        usedHintTypes = [];
+        
+        quizQuestion.innerHTML = currentQuizAnimal.deskripsi;
+        quizAnswerInput.value = '';
+        quizFeedback.textContent = '';
+        quizFeedback.className = '';
+        quizExtraHints.innerHTML = '';
+        
+        quizNextBtn.classList.add('hidden');
+        quizSubmitBtn.classList.remove('hidden');
+        quizHintBtn.classList.remove('hidden');
+        quizShowAnswerBtn.classList.remove('hidden');
+        quizHintBtn.disabled = false;
+        
+        renderAnswerPlaceholders();
+        quizAnswerInput.focus();
+    }
+
+    function revealRandomLetter() {
+        const answer = currentQuizAnimal.nama;
+        const unrevealedIndexes = [];
+        for (let i = 0; i < answer.length; i++) {
+            if (answer[i] !== ' ' && !revealedIndexes.includes(i)) {
+                unrevealedIndexes.push(i);
+            }
+        }
+
+        if (unrevealedIndexes.length > 0) {
+            const randomIndex = unrevealedIndexes[Math.floor(Math.random() * unrevealedIndexes.length)];
+            revealedIndexes.push(randomIndex);
+            renderAnswerPlaceholders();
+        } else {
+            showAnswer();
+        }
+    }
+    
+    function showNextHint() {
+        const hintPool = ['namaIlmiah', 'kebiasaanUnik', 'lokasi', 'tipeMakanan'];
+        const availableHints = hintPool.filter(type => !usedHintTypes.includes(type) && currentQuizAnimal[type]);
+
+        if (availableHints.length === 0) {
+            quizHintBtn.disabled = true;
+            return;
+        }
+
+        const randomHintType = availableHints[Math.floor(Math.random() * availableHints.length)];
+        usedHintTypes.push(randomHintType);
+
+        const hintText = currentQuizAnimal[randomHintType];
+        const hintLabel = {
+            namaIlmiah: 'Nama Ilmiah',
+            kebiasaanUnik: 'Kebiasaan Unik',
+            lokasi: 'Habitat',
+            tipeMakanan: 'Tipe Makanan'
+        }[randomHintType];
+        
+        const hintEl = document.createElement('p');
+        hintEl.innerHTML = `<strong>${hintLabel}:</strong> ${hintText}`;
+        quizExtraHints.appendChild(hintEl);
+        
+        if(availableHints.length - 1 === 0) {
+            quizHintBtn.disabled = true;
+        }
+    }
+
+    function checkAnswer() {
+        const userAnswer = quizAnswerInput.value.trim().toLowerCase();
+        const correctAnswer = currentQuizAnimal.nama.toLowerCase();
+        if (userAnswer === correctAnswer) {
+            revealedIndexes = [...Array(correctAnswer.length).keys()];
+            renderAnswerPlaceholders();
+            quizFeedback.textContent = 'Benar!';
+            quizFeedback.className = 'correct';
+            quizSubmitBtn.classList.add('hidden');
+            quizShowAnswerBtn.classList.add('hidden');
+            quizHintBtn.classList.add('hidden');
+            quizNextBtn.classList.remove('hidden');
+        } else {
+            quizFeedback.textContent = 'Kurang tepat, satu huruf terbuka!';
+            quizFeedback.className = 'incorrect';
+            revealRandomLetter();
+        }
+    }
+    
+    function showAnswer() {
+        revealedIndexes = [...Array(currentQuizAnimal.nama.length).keys()];
+        renderAnswerPlaceholders();
+        quizFeedback.textContent = `Jawabannya adalah ${currentQuizAnimal.nama}.`;
+        quizFeedback.className = '';
+        quizSubmitBtn.classList.add('hidden');
+        quizShowAnswerBtn.classList.add('hidden');
+        quizHintBtn.classList.add('hidden');
+        quizNextBtn.classList.remove('hidden');
     }
     
     function openModal(hewan) {
@@ -159,11 +264,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(nextHeroSlide, 7000); 
     loadAllAnimals();
     setInterval(showNextItem, 4000);
+    generateQuestion();
 
     heroPrevBtn.addEventListener('click', prevHeroSlide);
     heroNextBtn.addEventListener('click', nextHeroSlide);
     prevBtn.addEventListener('click', showPrevItem);
     nextBtn.addEventListener('click', showNextItem);
+    quizSubmitBtn.addEventListener('click', checkAnswer);
+    quizShowAnswerBtn.addEventListener('click', showAnswer);
+    quizHintBtn.addEventListener('click', showNextHint);
+    quizNextBtn.addEventListener('click', generateQuestion);
     
     animalContainer.addEventListener('click', e => {
         const card = e.target.closest('.carousel-item');
@@ -172,7 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
         if (hewan) openModal(hewan);
     });
-
+    
+    quizAnswerInput.addEventListener('keyup', e => { if (e.key === 'Enter') checkAnswer(); });
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
     scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));

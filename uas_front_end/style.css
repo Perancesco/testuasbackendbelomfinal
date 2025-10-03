@@ -1,5 +1,6 @@
 :root {
   --bg-color: #FDFCF7;
+  --bg-color-darker: #F0EBE0;
   --card-color: #FFFFFF;
   --primary-text: #074738;
   --secondary-text: #555555;
@@ -13,6 +14,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   background-color: var(--bg-color);
+  background-image: radial-gradient(ellipse at center, var(--bg-color) 0%, var(--bg-color-darker) 100%);
   color: var(--primary-text);
 }
 
@@ -32,18 +34,12 @@ body {
 .hero-nav-btn.prev { left: 30px; }
 .hero-nav-btn.next { right: 30px; }
 
-.section-title {
-    font-family: 'Lora', serif;
-    font-size: 2.5rem;
-    text-align: center;
-    color: var(--primary-text);
-    margin-bottom: 2rem;
-}
+.section-title { font-family: 'Lora', serif; font-size: 2.5rem; text-align: center; color: var(--primary-text); margin-bottom: 2rem; }
 
-.slider-wrapper { position: relative; width: 100%; padding: 2rem 0; }
-.container { max-width: 1000px; margin: 0 auto; overflow: hidden; }
+.slider-wrapper { position: relative; width: 100%; padding: 2rem 0; text-align: center; }
+.container { max-width: 1000px; margin: 0 auto; overflow: hidden; text-align: left; }
 .carousel-track { display: flex; gap: 2%; transition: transform 0.5s ease-in-out; }
-.carousel-item { background-color: var(--card-color); border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); flex: 0 0 23.5%; min-width: 23.5%; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+.carousel-item { background-color: var(--card-color); border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); flex: 0 0 23.5%; min-width: 23.5%; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; text-align: left; }
 .carousel-item:hover { transform: translateY(-5px); box-shadow: var(--glow); }
 .carousel-item .image-wrapper { width: 100%; height: 150px; background-color: #eee; }
 .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -56,104 +52,110 @@ body {
 .slider-nav-btn.prev { left: calc(50% - 500px - 60px); }
 .slider-nav-btn.next { right: calc(50% - 500px - 60px); }
 
-/* START OF NEW MAP STYLES */
-.map-section-wrapper { 
-    width: 100%; 
-    padding: 4rem 0; 
-    
-    /* Ganti warna dasar menjadi biru muda yang cerah */
-    background-color: #128ac2; 
-    
-    /* === PENAMBAHAN POLA GARIS DIAGONAL === */
-    /* Menggunakan linear-gradient untuk pola garis miring */
-    background-image: linear-gradient(
-        135deg, 
-        rgba(255, 255, 255, 0.2) 25%, 
-        transparent 25%, 
-        transparent 50%, 
-        rgba(255, 255, 255, 0.2) 50%, 
-        rgba(255, 255, 255, 0.2) 75%, 
-        transparent 75%, 
-        transparent
-    );
-    background-size: 20px 20px; /* Ukuran pengulangan pola */
-    background-blend-mode: overlay; /* Memastikan pola tidak terlalu mencolok */
-    /* ==================================== */
-}
-.map-section {
-    position: relative;
-    max-width: 1000px;
-    margin: 0 auto;
-    text-align: center;
-}
-.map-image {
-    width: 100%;
-    height: auto;
-    display: block;
+.map-section-wrapper { width: 100%; padding: 4rem 0; background-color: #42aee9; text-align: center; }
+.map-section-wrapper .section-title { display: inline-block; background-color: var(--card-color); padding: 0.5rem 2.5rem; border-radius: 30px; box-shadow: var(--shadow); font-size: 2.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+.map-section { position: relative; max-width: 1000px; margin: 0 auto; text-align: center; }
+.map-image { width: 100%; height: auto; display: block; }
+
+/* === KODE ANIMASI WAYPOINT BARU (GAYA RIAK AIR dengan ikon Navigasi) === */
+@keyframes ripple-effect {
+  to {
+    transform: translate(-50%, -50%) scale(1.5); /* Sesuaikan transform untuk posisi tengah */
+    opacity: 0;
+  }
 }
 
 .map-waypoint {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: var(--primary-text); /* Warna utama waypoint */
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 0 5px rgba(7, 71, 56, 0.5); /* Efek pulse */
-    z-index: 50;
-    transition: all 0.3s ease;
+  position: absolute;
+  width: 50px; /* Lebar ikon */
+  height: 40px; /* Tinggi ikon */
+  background-image: url('Navigasi.png'); /* Gambar ikon Anda */
+  background-size: contain; /* Agar ikon pas di dalam area */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent; /* Hapus warna latar belakang bulat */
+  border-radius: 0; /* Hapus border-radius agar tidak bulat */
+  cursor: pointer;
+  z-index: 50;
+  transition: transform 0.3s ease;
+  transform: translate(-50%, -50%) scale(1); /* Posisikan tengah ikon */
+  display: flex; /* Tambahkan ini agar after/before child bisa diatur */
+  justify-content: center;
+  align-items: center;
+}
+
+.map-waypoint::before {
+  content: '';
+  position: absolute;
+  top: 50%; /* Posisikan riak di tengah ikon */
+  left: 50%; /* Posisikan riak di tengah ikon */
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(7, 71, 56, 0.5); /* Warna riak, bisa disesuaikan */
+  animation: ripple-effect 1.5s infinite ease-out;
+  z-index: -1;
+  transform: translate(-50%, -50%) scale(0); /* Awalnya kecil di tengah */
 }
 
 .map-waypoint::after {
-    content: attr(data-label);
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    background-color: var(--primary-text);
-    color: var(--card-color);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+  content: attr(data-label);
+  position: absolute;
+  top: -40px; /* Sesuaikan posisi label di atas ikon */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background-color: var(--primary-text);
+  color: var(--card-color);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
 }
 
 .map-waypoint:hover {
-    background-color: var(--accent-color);
-    box-shadow: 0 0 0 8px rgba(207, 242, 143, 0.7);
+  transform: translate(-50%, -50%) scale(1.1); /* Perbesar sedikit saat di-hover */
+  background-color: transparent; /* Pastikan tidak ada warna latar belakang */
+}
+
+.map-waypoint:hover::before {
+  animation: none; /* Hentikan animasi riak saat di-hover */
 }
 
 .map-waypoint:hover::after {
-    opacity: 1;
-    top: -40px;
+  opacity: 1;
+  top: -60px; /* Sesuaikan posisi label di atas ikon saat di-hover */
 }
 
-/* Penempatan Waypoint (Disesuaikan dengan gambar) */
-/* Koordinat diset berdasarkan persentase dari kiri (left) dan atas (top) */
+/* === POSISI WAYPOINT === */
+.waypoint-1 { top: 67%; left: 16%; } 
+.waypoint-2 { top: 72%; left: 50%; } 
+.waypoint-3 { top: 51%; left: 34%; } 
+.waypoint-4 { top: 48%; left: 52%; } 
+.waypoint-5 { top: 45%; left: 83%; } 
+.waypoint-6 { top: 66%; left: 34%; } 
+.waypoint-7 { top: 70%; left: 69%; } 
+.waypoint-8 { top: 60%; left: 80%; }
 
-/* Sumatra (Pulau paling kiri) */
-.waypoint-1 { top: 40%; left: 15%; } 
+.quiz-section-wrapper { width: 100%; padding: 4rem 0; }
+.quiz-container { max-width: 800px; margin: 0 auto; text-align: center; background-color: var(--card-color); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+#quiz-question { font-size: 1.2rem; line-height: 1.6; color: var(--secondary-text); min-height: 60px; }
+#quiz-extra-hints { width: 100%; margin-top: 1rem; }
+#quiz-extra-hints p { background-color: var(--bg-color); padding: 0.5rem; border-radius: 5px; font-size: 0.9rem; color: var(--secondary-text); border-left: 3px solid var(--accent-color); text-align: left; }
+.quiz-answer-boxes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 1rem; min-height: 50px; }
+.letter-box { width: 40px; height: 50px; border-bottom: 3px solid var(--primary-text); display: inline-flex; justify-content: center; align-items: center; font-size: 2rem; font-family: 'Lora', serif; }
+.letter-space { width: 20px; border: none; }
+#quiz-feedback { font-weight: bold; min-height: 1.2rem; }
+#quiz-feedback.correct { color: #28a745; }
+#quiz-feedback.incorrect { color: #dc3545; }
+#quiz-answer-input { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; width: 80%; max-width: 400px; text-align: center; margin-top: 1rem; }
+.quiz-buttons { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
+.cta-button.secondary { background-color: var(--card-color); color: var(--secondary-text); border: 1px solid var(--border-color); }
+.hidden { display: none !important; }
 
-/* Jawa (Pulau tengah bawah, yang paling panjang) */
-.waypoint-2 { top: 60%; left: 45%; } 
-
-/* Kalimantan (Pulau tengah atas) */
-.waypoint-3 { top: 45%; left: 35%; } 
-
-/* Sulawesi (Pulau di kanan tengah) */
-.waypoint-4 { top: 45%; left: 65%; } 
-
-/* Nusa Tenggara (Pulau paling bawah kanan) */
-.waypoint-5 { top: 70%; left: 55%; } 
-
-/* Papua (Pulau paling kanan) */
-.waypoint-6 { top: 35%; left: 80%; } 
-/* END OF NEW MAP STYLES */
-
-footer { text-align: center; padding: 2rem; background-color: var(--card-color); color: var(--secondary-text); margin-top: 2rem; border-top: 1px solid var(--border-color); }
+footer { text-align: center; padding: 2rem; background-color: var(--card-color); color: var(--secondary-text); border-top: 1px solid var(--border-color); }
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { background-color: var(--card-color); padding: 2.5rem; border-radius: 15px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
 .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2.5rem; background: none; border: none; cursor: pointer; color: var(--secondary-text); }
@@ -161,14 +163,6 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 .modal-body h2 { font-family: 'Lora', serif; color: var(--primary-text); font-size: 2.8rem; }
 .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
 .detail-item h4 { margin: 0; color: var(--primary-text); font-weight: 600; margin-bottom: 0.5rem; }
-.random-animals { margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 2rem; }
-.random-grid { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1.5rem; }
-.random-card { text-align: center; width: 120px; cursor: pointer; }
-.random-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-text); }
-
-#create-form, #edit-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
-#create-form input, #create-form textarea, #create-form select, #edit-form input, #edit-form textarea, #edit-form select { padding: 0.8rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; background-color: var(--bg-color); color: var(--primary-text); }
-#create-form button, #edit-form button { padding: 0.8rem 1.2rem; border: none; border-radius: 8px; font-size: 1rem; background-color: var(--primary-text); color: var(--card-color); cursor: pointer; font-weight: 600; }
 
 .scroll-buttons { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
 #scrollTopBtn, #scrollBottomBtn { background-color: var(--primary-text); color: var(--card-color); border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow); }
@@ -179,11 +173,12 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     .slider-nav-btn.prev { left: 10px; }
     .slider-nav-btn.next { right: 10px; }
 }
-
 @media (max-width: 768px) {
     .hero-section { min-height: 450px; }
     .slider-nav-btn, .hero-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
-    .map-waypoint { width: 20px; height: 20px; }
-    .map-waypoint::after { font-size: 0.75rem; top: -25px; }
-    .map-waypoint:hover::after { top: -35px; }
+    .map-waypoint { width: 40px; height: 40px; } /* Sesuaikan ukuran ikon untuk responsif */
+    .map-waypoint::after { font-size: 0.75rem; top: -30px; } /* Sesuaikan posisi label untuk responsif */
+    .map-waypoint:hover::after { top: -40px; }
+    .letter-box { width: 25px; height: 35px; font-size: 1.5rem; gap: 5px; }
+    .letter-space { width: 10px; }
 }
