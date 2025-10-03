@@ -1,5 +1,6 @@
 :root {
   --bg-color: #FDFCF7;
+  --bg-color-darker: #F0EBE0;
   --card-color: #FFFFFF;
   --primary-text: #074738;
   --secondary-text: #555555;
@@ -13,6 +14,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   background-color: var(--bg-color);
+  background-image: radial-gradient(ellipse at center, var(--bg-color) 0%, var(--bg-color-darker) 100%);
   color: var(--primary-text);
 }
 
@@ -40,10 +42,10 @@ body {
     margin-bottom: 2rem;
 }
 
-.slider-wrapper { position: relative; width: 100%; padding: 2rem 0; }
-.container { max-width: 1000px; margin: 0 auto; overflow: hidden; }
+.slider-wrapper { position: relative; width: 100%; padding: 2rem 0; text-align: center; }
+.container { max-width: 1000px; margin: 0 auto; overflow: hidden; text-align: left; }
 .carousel-track { display: flex; gap: 2%; transition: transform 0.5s ease-in-out; }
-.carousel-item { background-color: var(--card-color); border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); flex: 0 0 23.5%; min-width: 23.5%; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+.carousel-item { background-color: var(--card-color); border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); flex: 0 0 23.5%; min-width: 23.5%; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; text-align: left; }
 .carousel-item:hover { transform: translateY(-5px); box-shadow: var(--glow); }
 .carousel-item .image-wrapper { width: 100%; height: 150px; background-color: #eee; }
 .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -56,102 +58,35 @@ body {
 .slider-nav-btn.prev { left: calc(50% - 500px - 60px); }
 .slider-nav-btn.next { right: calc(50% - 500px - 60px); }
 
-/* START OF NEW MAP STYLES */
 .map-section-wrapper { 
     width: 100%; 
     padding: 4rem 0; 
-    
-    /* Ganti warna dasar menjadi biru muda yang cerah */
-    background-color: #128ac2; 
-    
-    /* === PENAMBAHAN POLA GARIS DIAGONAL === */
-    /* Menggunakan linear-gradient untuk pola garis miring */
-    background-image: linear-gradient(
-        135deg, 
-        rgba(255, 255, 255, 0.2) 25%, 
-        transparent 25%, 
-        transparent 50%, 
-        rgba(255, 255, 255, 0.2) 50%, 
-        rgba(255, 255, 255, 0.2) 75%, 
-        transparent 75%, 
-        transparent
-    );
-    background-size: 20px 20px; /* Ukuran pengulangan pola */
-    background-blend-mode: overlay; /* Memastikan pola tidak terlalu mencolok */
-    /* ==================================== */
-}
-.map-section {
-    position: relative;
-    max-width: 1000px;
-    margin: 0 auto;
+    background-color: #42aee9;
     text-align: center;
 }
-.map-image {
-    width: 100%;
-    height: auto;
-    display: block;
+
+.map-section-wrapper .section-title {
+    display: inline-block;
+    background-color: var(--card-color);
+    padding: 0.5rem 2.5rem;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-.map-waypoint {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    background-color: var(--primary-text); /* Warna utama waypoint */
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 0 5px rgba(7, 71, 56, 0.5); /* Efek pulse */
-    z-index: 50;
-    transition: all 0.3s ease;
-}
-
-.map-waypoint::after {
-    content: attr(data-label);
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    background-color: var(--primary-text);
-    color: var(--card-color);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.map-waypoint:hover {
-    background-color: var(--accent-color);
-    box-shadow: 0 0 0 8px rgba(207, 242, 143, 0.7);
-}
-
-.map-waypoint:hover::after {
-    opacity: 1;
-    top: -40px;
-}
-
-/* Penempatan Waypoint (Disesuaikan dengan gambar) */
-/* Koordinat diset berdasarkan persentase dari kiri (left) dan atas (top) */
-
-/* Sumatra (Pulau paling kiri) */
+.map-section { position: relative; max-width: 1000px; margin: 0 auto; text-align: center; }
+.map-image { width: 100%; height: auto; display: block; }
+.map-waypoint { position: absolute; width: 30px; height: 30px; background-color: var(--primary-text); border-radius: 50%; cursor: pointer; box-shadow: 0 0 0 5px rgba(7, 71, 56, 0.5); z-index: 50; transition: all 0.3s ease; }
+.map-waypoint::after { content: attr(data-label); position: absolute; top: -30px; left: 50%; transform: translateX(-50%); white-space: nowrap; background-color: var(--primary-text); color: var(--card-color); padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.map-waypoint:hover { background-color: var(--accent-color); box-shadow: 0 0 0 8px rgba(207, 242, 143, 0.7); }
+.map-waypoint:hover::after { opacity: 1; top: -40px; }
 .waypoint-1 { top: 40%; left: 15%; } 
-
-/* Jawa (Pulau tengah bawah, yang paling panjang) */
 .waypoint-2 { top: 60%; left: 45%; } 
-
-/* Kalimantan (Pulau tengah atas) */
 .waypoint-3 { top: 45%; left: 35%; } 
-
-/* Sulawesi (Pulau di kanan tengah) */
 .waypoint-4 { top: 45%; left: 65%; } 
-
-/* Nusa Tenggara (Pulau paling bawah kanan) */
 .waypoint-5 { top: 70%; left: 55%; } 
-
-/* Papua (Pulau paling kanan) */
 .waypoint-6 { top: 35%; left: 80%; } 
-/* END OF NEW MAP STYLES */
 
 footer { text-align: center; padding: 2rem; background-color: var(--card-color); color: var(--secondary-text); margin-top: 2rem; border-top: 1px solid var(--border-color); }
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; backdrop-filter: blur(5px); }
