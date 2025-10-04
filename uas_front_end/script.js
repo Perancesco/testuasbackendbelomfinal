@@ -1,7 +1,7 @@
 const heroSlidesData = [
     { video: 'videos/Gajah_Makan.mp4', judul: 'Gajah Sumatra', subjudul: 'Herbivora Lembut yang Terancam' },
     { video: 'videos/lumba_lumba.mp4', judul: 'Lumba-Lumba', subjudul: 'Kecerdasan di Kedalaman Biru' },
-    { video: 'videos/placeholder.mp4', judul: 'Video Berikutnya', subjudul: 'Jelajahi Keajaiban Lainnya' }
+    { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
 ];
 
 function scrollToCarousel() {
@@ -11,7 +11,8 @@ function scrollToCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const animalContainer = document.getElementById('animal-container');
+    const animalContainer = document.getElementById('animal-container'); 
+    
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
     const closeModalBtn = modal.querySelector('.close-btn');
@@ -34,6 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizShowAnswerBtn = document.getElementById('quiz-show-answer-btn');
     const quizNextBtn = document.getElementById('quiz-next-btn');
     
+    const locationListPage = document.getElementById('location-list-page');
+    const locationListTitle = document.getElementById('location-list-title');
+    const locationAnimalList = document.getElementById('location-animal-list');
+    const backToHomeBtn = document.getElementById('back-to-home-btn');
+    const filterNameInput = document.getElementById('filter-name');
+    const filterTipeMakanan = document.getElementById('filter-tipe-makanan');
+    const filterPopulasi = document.getElementById('filter-populasi');
+    const resetFilterBtn = document.getElementById('reset-filter-btn');
+    let currentFilteredLocation = ''; 
+
     let currentIndex = 0;
     let currentlyDisplayedAnimals = [];
     let currentHeroIndex = 0;
@@ -257,6 +268,72 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'flex';
     }
 
+    function toggleMainContent(showLocationList) {
+        const mainElements = [
+            document.getElementById('hero-section'),
+            document.getElementById('animal-container-wrapper'),
+            document.querySelector('.about-section-wrapper'), 
+            document.querySelector('.map-section-wrapper'),
+            document.querySelector('.quiz-section-wrapper'),
+            document.querySelector('footer')
+        ];
+        
+        mainElements.forEach(el => {
+            if (el) el.classList.toggle('hidden', showLocationList);
+        });
+
+        locationListPage.classList.toggle('hidden', !showLocationList);
+        
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    
+    function renderLocationAnimals(location, filterName = '', filterMakanan = '', filterPop = '') {
+        currentFilteredLocation = location;
+        locationListTitle.textContent = `Hewan Langka di ${location}`;
+        
+        const animalsInLocation = dataHewan.filter(hewan => 
+            hewan.lokasi.includes(location) 
+            && hewan.nama.toLowerCase().includes(filterName.toLowerCase())
+            && (filterMakanan === '' || hewan.tipeMakanan === filterMakanan)
+            && (filterPop === '' 
+                || (filterPop === 'Tidak Diketahui' && !hewan.statusKonservasi)
+                || hewan.statusKonservasi === filterPop)
+        );
+
+        locationAnimalList.innerHTML = '';
+        if (animalsInLocation.length === 0) {
+            locationAnimalList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--secondary-text);">Tidak ada data hewan yang ditemukan sesuai filter.</p>';
+            return;
+        }
+
+        animalsInLocation.forEach(hewan => {
+            const card = document.createElement('div');
+            card.className = 'location-card';
+            const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
+            card.dataset.id = uniqueId;
+            card.innerHTML = `
+                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
+                <div class="card-content">
+                    <h3>${hewan.nama || ''}</h3>
+                    <p class="short-desc">${(hewan.deskripsi || '').substring(0, 100)}...</p>
+                    <p class="short-desc"><strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}</p>
+                    <p class="short-desc"><strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}</p>
+                </div>
+            `;
+            locationAnimalList.appendChild(card);
+        });
+        
+        toggleMainContent(true);
+    }
+    
+    function applyFilters() {
+        const name = filterNameInput.value.trim();
+        const tipeMakanan = filterTipeMakanan.value;
+        const populasi = filterPopulasi.value;
+        renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, populasi);
+    }
+
+
     createHeroSlides();
     showHeroSlide(0);
     setInterval(nextHeroSlide, 7000); 
@@ -281,6 +358,40 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hewan) openModal(hewan);
     });
     
+    document.querySelectorAll('.map-waypoint').forEach(waypoint => {
+        waypoint.addEventListener('click', (e) => {
+            e.preventDefault();
+            const location = waypoint.dataset.location;
+            filterNameInput.value = '';
+            filterTipeMakanan.value = '';
+            filterPopulasi.value = '';
+            renderLocationAnimals(location);
+        });
+    });
+
+    backToHomeBtn.addEventListener('click', () => {
+        toggleMainContent(false);
+        document.getElementById('scrollBottomBtn').click(); 
+    });
+    
+    filterNameInput.addEventListener('keyup', applyFilters);
+    filterTipeMakanan.addEventListener('change', applyFilters);
+    filterPopulasi.addEventListener('change', applyFilters);
+    resetFilterBtn.addEventListener('click', () => {
+        filterNameInput.value = '';
+        filterTipeMakanan.value = '';
+        filterPopulasi.value = '';
+        applyFilters();
+    });
+    
+    locationAnimalList.addEventListener('click', e => {
+        const card = e.target.closest('.location-card');
+        if (!card) return;
+        const animalId = card.dataset.id;
+        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        if (hewan) openModal(hewan);
+    });
+
     quizAnswerInput.addEventListener('keyup', e => { if (e.key === 'Enter') checkAnswer(); });
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
