@@ -24,6 +24,37 @@
         <a href="#animal-container-wrapper" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
     </div>
     
+    <div class="about-section-wrapper">
+        <h2 class="section-title">Tentang Kami: Proyek Konservasi</h2>
+        <div class="about-grid-container container">
+            <div class="about-item about-paragraph-1">
+                <p class="about-text text-left">
+                    Kalian tahu ga sih? Di Nusantara ini banyak banget hewan-hewan yang udah terancam punah! Padahal Indonesia terkenal banget dengan keanekaragaman hayatinya. Tapi sayangnya, populasi mereka sudah tidak banyak lagi.
+                </p>
+            </div>
+            <div class="about-item about-image-2">
+                <div class="about-image-box">
+                    <img src="images/about_2.jpg" alt="Gambar Ilustrasi Konservasi 2">
+                </div>
+            </div>
+            <div class="about-item about-image-1">
+                <div class="about-image-box">
+                    <img src="images/about_1.jpg" alt="Gambar Ilustrasi Konservasi 1">
+                </div>
+            </div>
+            <div class="about-item about-paragraph-2">
+                <p class="about-text text-right">
+                    Mengapa hal ini penting? Dikarenakan tiap daerah di Indonesia punya cara unik buat menjaga alamnya. Misalnya, masyarakat adat di Kalimantan punya pantangan menebang pohon di sekitar sarang orangutan, atau di Papua, burung cenderawasih dianggap suci dan nggak boleh diburu. Itu semua bagian dari kearifan lokal yang udah ada sejak lama.
+                </p>
+            </div>
+            <div class="about-item about-paragraph-3">
+                <p class="about-text text-left">
+                    Jadi marilah kita telusuri, apa aja sih..hewan hewan di nusantara yang sudah terancam punah
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="slider-wrapper" id="animal-container-wrapper">
         <h2 class="section-title">Ensiklopedia</h2>
         <main id="animal-container" class="container">
@@ -36,17 +67,45 @@
         <h2 class="section-title">Jelajahi Habitat</h2>
         <section class="map-section container">
             <img src="penanda.png" alt="Peta Kepulauan Indonesia" class="map-image">
-            <a href="https://google.com/search?q=Sumatra" target="_blank" class="map-waypoint waypoint-1" data-label="Sumatra"></a>
-            <a href="https://google.com/search?q=Jawa" target="_blank" class="map-waypoint waypoint-2" data-label="Jawa"></a>
-            <a href="https://google.com/search?q=Kalimantan" target="_blank" class="map-waypoint waypoint-3" data-label="Kalimantan"></a>
-            <a href="https://google.com/search?q=Sulawesi" target="_blank" class="map-waypoint waypoint-4" data-label=" Sulawesi"></a>
-            <a href="https://google.com/search?q=Nusa+Tenggara" target="_blank" class="map-waypoint waypoint-5" data-label="Papua"></a>
-            <a href="https://google.com/search?q=Papua" target="_blank" class="map-waypoint waypoint-6" data-label="Perairan Indonesia"></a>
-            <a href="https://google.com/search?q=Kepulauan+Maluku" target="_blank" class="map-waypoint waypoint-7" data-label="Bali"></a>
-            <a href="https://google.com/search?q=Kepulauan+Sunda+Kecil" target="_blank" class="map-waypoint waypoint-8" data-label="Nusa Tenggara"></a>
+            <a class="map-waypoint waypoint-1" data-label="Sumatra" data-location="Sumatra"></a>
+            <a class="map-waypoint waypoint-2" data-label="Jawa" data-location="Jawa"></a>
+            <a class="map-waypoint waypoint-3" data-label="Kalimantan" data-location="Kalimantan"></a>
+            <a class="map-waypoint waypoint-4" data-label="Sulawesi" data-location="Sulawesi"></a>
+            <a class="map-waypoint waypoint-5" data-label="Papua" data-location="Papua"></a>
+            <a class="map-waypoint waypoint-6" data-label="Perairan Indonesia" data-location="Perairan Indonesia"></a>
+            <a class="map-waypoint waypoint-7" data-label="Bali" data-location="Bali"></a>
+            <a class="map-waypoint waypoint-8" data-label="Nusa Tenggara" data-location="Nusa Tenggara"></a>
         </section>
     </div>
 
+    <div id="location-list-page" class="location-list-page hidden">
+        <div class="container">
+            <button id="back-to-home-btn" class="cta-button secondary back-btn">⮜ Kembali ke Beranda</button>
+            <h2 id="location-list-title" class="section-title">Hewan Langka di [Lokasi]</h2>
+
+            <div class="filter-controls">
+                <input type="text" id="filter-name" placeholder="Filter berdasarkan Nama..." class="filter-input">
+                <select id="filter-tipe-makanan" class="filter-select">
+                    <option value="">Semua Tipe Makanan</option>
+                    <option value="Karnivora">Karnivora</option>
+                    <option value="Herbivora">Herbivora</option>
+                    <option value="Omnivora">Omnivora</option>
+                </select>
+                <select id="filter-populasi" class="filter-select">
+                    <option value="">Semua Status Konservasi</option>
+                    <option value="Kritis">Kritis</option>
+                    <option value="Terancam">Terancam</option>
+                    <option value="Rentan">Rentan</option>
+                    <option value="Hampir Terancam">Hampir Terancam</option>
+                    <option value="Tidak Diketahui">Tidak Diketahui</option>
+                </select>
+                <button id="reset-filter-btn" class="cta-button secondary">Reset Filter</button>
+            </div>
+
+            <div id="location-animal-list" class="location-animal-list-grid">
+                </div>
+        </div>
+    </div>
     <div class="quiz-section-wrapper">
         <div class="quiz-container">
             <h2 class="section-title">Tebak Hewan!</h2>

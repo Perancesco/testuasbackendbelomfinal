@@ -1,5 +1,3 @@
-// file: data.js (Lanjutan)
-
 const dataHewan = [
   {
     nama: "Harimau Sumatra",
