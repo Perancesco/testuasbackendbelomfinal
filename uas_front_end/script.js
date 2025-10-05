@@ -12,7 +12,6 @@ function scrollToCarousel() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const animalContainer = document.getElementById('animal-container'); 
-    
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
     const closeModalBtn = modal.querySelector('.close-btn');
@@ -34,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizHintBtn = document.getElementById('quiz-hint-btn');
     const quizShowAnswerBtn = document.getElementById('quiz-show-answer-btn');
     const quizNextBtn = document.getElementById('quiz-next-btn');
-    
+    const mainContent = document.getElementById('main-content');
     const locationListPage = document.getElementById('location-list-page');
     const locationListTitle = document.getElementById('location-list-title');
     const locationAnimalList = document.getElementById('location-animal-list');
@@ -154,19 +153,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuizAnimal = dataHewan[Math.floor(Math.random() * dataHewan.length)];
         revealedIndexes = [];
         usedHintTypes = [];
-        
         quizQuestion.innerHTML = currentQuizAnimal.deskripsi;
         quizAnswerInput.value = '';
         quizFeedback.textContent = '';
         quizFeedback.className = '';
         quizExtraHints.innerHTML = '';
-        
         quizNextBtn.classList.add('hidden');
         quizSubmitBtn.classList.remove('hidden');
         quizHintBtn.classList.remove('hidden');
         quizShowAnswerBtn.classList.remove('hidden');
         quizHintBtn.disabled = false;
-        
         renderAnswerPlaceholders();
         quizAnswerInput.focus();
     }
@@ -202,12 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         usedHintTypes.push(randomHintType);
 
         const hintText = currentQuizAnimal[randomHintType];
-        const hintLabel = {
-            namaIlmiah: 'Nama Ilmiah',
-            kebiasaanUnik: 'Kebiasaan Unik',
-            lokasi: 'Habitat',
-            tipeMakanan: 'Tipe Makanan'
-        }[randomHintType];
+        const hintLabel = { namaIlmiah: 'Nama Ilmiah', kebiasaanUnik: 'Kebiasaan Unik', lokasi: 'Habitat', tipeMakanan: 'Tipe Makanan' }[randomHintType];
         
         const hintEl = document.createElement('p');
         hintEl.innerHTML = `<strong>${hintLabel}:</strong> ${hintText}`;
@@ -269,21 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toggleMainContent(showLocationList) {
-        const mainElements = [
-            document.getElementById('hero-section'),
-            document.getElementById('animal-container-wrapper'),
-            document.querySelector('.about-section-wrapper'), 
-            document.querySelector('.map-section-wrapper'),
-            document.querySelector('.quiz-section-wrapper'),
-            document.querySelector('footer')
-        ];
-        
-        mainElements.forEach(el => {
-            if (el) el.classList.toggle('hidden', showLocationList);
-        });
-
+        mainContent.classList.toggle('hidden', showLocationList);
         locationListPage.classList.toggle('hidden', !showLocationList);
-        
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
     
@@ -333,7 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, populasi);
     }
 
-
     createHeroSlides();
     showHeroSlide(0);
     setInterval(nextHeroSlide, 7000); 
@@ -354,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => (h.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(h)}`) === animalId);
         if (hewan) openModal(hewan);
     });
     
@@ -371,7 +348,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     backToHomeBtn.addEventListener('click', () => {
         toggleMainContent(false);
-        document.getElementById('scrollBottomBtn').click(); 
     });
     
     filterNameInput.addEventListener('keyup', applyFilters);
@@ -388,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.location-card');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => (h.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(h)}`) === animalId);
         if (hewan) openModal(hewan);
     });
 
