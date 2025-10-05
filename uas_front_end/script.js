@@ -12,7 +12,6 @@ function scrollToCarousel() {
 
 document.addEventListener('DOMContentLoaded', () => {
     const animalContainer = document.getElementById('animal-container'); 
-    
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
     const closeModalBtn = modal.querySelector('.close-btn');
@@ -34,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizHintBtn = document.getElementById('quiz-hint-btn');
     const quizShowAnswerBtn = document.getElementById('quiz-show-answer-btn');
     const quizNextBtn = document.getElementById('quiz-next-btn');
-    
+    const mainContent = document.getElementById('main-content');
     const locationListPage = document.getElementById('location-list-page');
     const locationListTitle = document.getElementById('location-list-title');
     const locationAnimalList = document.getElementById('location-animal-list');
@@ -48,10 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentIndex = 0;
     let currentlyDisplayedAnimals = [];
     let currentHeroIndex = 0;
-    const itemsPerPage = 4;
+    const itemsPerPage = 4; // for main carousel
     let currentQuizAnimal = null;
     let revealedIndexes = [];
     let usedHintTypes = [];
+
+    // Variabel untuk carousel "Lihat Juga"
+    let randomCarouselIndex = 0;
+    const randomItemsPerView = 3; // Jumlah item yang terlihat di "Lihat Juga"
 
     function createHeroSlides() {
         heroSlidesData.forEach(slideData => {
@@ -154,19 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
         currentQuizAnimal = dataHewan[Math.floor(Math.random() * dataHewan.length)];
         revealedIndexes = [];
         usedHintTypes = [];
-        
         quizQuestion.innerHTML = currentQuizAnimal.deskripsi;
         quizAnswerInput.value = '';
         quizFeedback.textContent = '';
         quizFeedback.className = '';
         quizExtraHints.innerHTML = '';
-        
         quizNextBtn.classList.add('hidden');
         quizSubmitBtn.classList.remove('hidden');
         quizHintBtn.classList.remove('hidden');
         quizShowAnswerBtn.classList.remove('hidden');
         quizHintBtn.disabled = false;
-        
         renderAnswerPlaceholders();
         quizAnswerInput.focus();
     }
@@ -202,12 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         usedHintTypes.push(randomHintType);
 
         const hintText = currentQuizAnimal[randomHintType];
-        const hintLabel = {
-            namaIlmiah: 'Nama Ilmiah',
-            kebiasaanUnik: 'Kebiasaan Unik',
-            lokasi: 'Habitat',
-            tipeMakanan: 'Tipe Makanan'
-        }[randomHintType];
+        const hintLabel = { namaIlmiah: 'Nama Ilmiah', kebiasaanUnik: 'Kebiasaan Unik', lokasi: 'Habitat', tipeMakanan: 'Tipe Makanan' }[randomHintType];
         
         const hintEl = document.createElement('p');
         hintEl.innerHTML = `<strong>${hintLabel}:</strong> ${hintText}`;
@@ -249,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function openModal(hewan) {
-        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 3);
+        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5); // Ambil lebih banyak untuk carousel
+        
         modalBody.innerHTML = `
             <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}">
             <h2>${hewan.nama || 'N/A'}</h2>
@@ -261,29 +257,102 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="detail-item"><h4>Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
                 <div class="detail-item"><h4>Kearifan Lokal</h4><p>${hewan.hubunganMasyarakat || 'N/A'}</p></div>
             </div>
-            <div class="random-animals"><h3>Lihat Juga</h3><div class="random-grid">
-            ${randomAnimals.map(rand => `<div class="random-card" data-id="${rand.namaIlmiah}"><img src="${rand.gambar}" alt="${rand.nama}"><p>${rand.nama}</p></div>`).join('')}
-            </div></div>
+            <div class="random-animals">
+                <h3>Lihat Juga</h3>
+                <div class="random-carousel-container">
+                    <div class="random-grid">
+                        ${randomAnimals.map(rand => `
+                            <div class="random-card" data-id="${rand.namaIlmiah}">
+                                <img src="${rand.gambar}" alt="${rand.nama}">
+                                <p>${rand.nama}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="random-nav-btn prev hidden">⮜</button>
+                    <button class="random-nav-btn next hidden">⮞</button>
+                </div>
+                <div class="random-dots-container"></div>
+            </div>
         `;
         modal.style.display = 'flex';
+
+        // Inisialisasi carousel "Lihat Juga"
+        if (randomAnimals.length > randomItemsPerView) {
+            initRandomCarousel(randomAnimals);
+        }
     }
 
-    function toggleMainContent(showLocationList) {
-        const mainElements = [
-            document.getElementById('hero-section'),
-            document.getElementById('animal-container-wrapper'),
-            document.querySelector('.about-section-wrapper'), 
-            document.querySelector('.map-section-wrapper'),
-            document.querySelector('.quiz-section-wrapper'),
-            document.querySelector('footer')
-        ];
+    // Fungsi untuk menginisialisasi carousel "Lihat Juga"
+    function initRandomCarousel(animals) {
+        const randomGrid = modalBody.querySelector('.random-grid');
+        const prevRandomBtn = modalBody.querySelector('.random-nav-btn.prev');
+        const nextRandomBtn = modalBody.querySelector('.random-nav-btn.next');
+        const dotsContainer = modalBody.querySelector('.random-dots-container');
+
+        prevRandomBtn.classList.remove('hidden');
+        nextRandomBtn.classList.remove('hidden');
+
+        randomCarouselIndex = 0; // Reset index saat modal dibuka
+        updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
+
+        prevRandomBtn.onclick = () => {
+            randomCarouselIndex = (randomCarouselIndex - 1 + animals.length) % animals.length;
+            updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
+        };
+
+        nextRandomBtn.onclick = () => {
+            randomCarouselIndex = (randomCarouselIndex + 1) % animals.length;
+            updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
+        };
+
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < animals.length; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'random-dot';
+            dot.dataset.index = i;
+            dot.addEventListener('click', () => {
+                randomCarouselIndex = i;
+                updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    // Fungsi untuk memperbarui tampilan carousel "Lihat Juga"
+    function updateRandomCarousel(animals, randomGrid, prevBtn, nextBtn, dotsContainer) {
+        const cardWidth = randomGrid.querySelector('.random-card') ? randomGrid.querySelector('.random-card').offsetWidth : 0;
+        const gap = parseInt(window.getComputedStyle(randomGrid).marginRight); // Ambil nilai gap dari CSS
+
+        // Hitung total lebar satu item (card + gap)
+        const itemFullWidth = cardWidth + (cardWidth * 0.02 / 0.32); // 2% gap / 32% card width ratio
         
-        mainElements.forEach(el => {
-            if (el) el.classList.toggle('hidden', showLocationList);
+        // Geser grid
+        // Gunakan transform: translateX untuk menggeser track carousel
+        const offset = -randomCarouselIndex * (100 / randomItemsPerView); // Geser sebanyak persentase dari itemFullWidth
+        randomGrid.style.transform = `translateX(${offset}%)`;
+
+        // Update dots
+        const dots = dotsContainer.querySelectorAll('.random-dot');
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === randomCarouselIndex);
         });
 
+        // Tampilkan/sembunyikan tombol navigasi jika diperlukan (untuk kasus sedikit item)
+        if (animals.length <= randomItemsPerView) {
+            prevBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            dotsContainer.classList.add('hidden');
+        } else {
+            prevBtn.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+            dotsContainer.classList.remove('hidden');
+        }
+    }
+
+
+    function toggleMainContent(showLocationList) {
+        mainContent.classList.toggle('hidden', showLocationList);
         locationListPage.classList.toggle('hidden', !showLocationList);
-        
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
     
@@ -333,7 +402,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, populasi);
     }
 
-
     createHeroSlides();
     showHeroSlide(0);
     setInterval(nextHeroSlide, 7000); 
@@ -354,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => (h.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(h)}`) === animalId);
         if (hewan) openModal(hewan);
     });
     
@@ -371,7 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     backToHomeBtn.addEventListener('click', () => {
         toggleMainContent(false);
-        document.getElementById('scrollBottomBtn').click(); 
     });
     
     filterNameInput.addEventListener('keyup', applyFilters);
@@ -392,9 +459,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hewan) openModal(hewan);
     });
 
+    // Delegasi event untuk random-card di dalam modal
+    modalBody.addEventListener('click', e => {
+        const randomCard = e.target.closest('.random-card');
+        if (randomCard) {
+            const animalId = randomCard.dataset.id;
+            const hewan = dataHewan.find(h => h.namaIlmiah === animalId);
+            if (hewan) {
+                openModal(hewan); // Buka modal baru untuk hewan yang dipilih
+            }
+        }
+    });
+
+
     quizAnswerInput.addEventListener('keyup', e => { if (e.key === 'Enter') checkAnswer(); });
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
-    window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    window.addEventListener('click', e => { 
+        if (e.target === modal) {
+            modal.style.display = 'none'; 
+        }
+    });
     scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     scrollBottomBtn.addEventListener("click", () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
 });

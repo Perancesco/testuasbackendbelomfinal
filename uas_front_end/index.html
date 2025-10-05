@@ -11,71 +11,94 @@
 </head>
 <body>
 
-    <div class="hero-section" id="hero-section">
-        <div class="hero-slider-container" id="hero-slider-container"></div>
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h2 id="hero-title" class="hero-title"></h2>
-            <p id="hero-subtitle" class="hero-subtitle"></p>
-            <button class="cta-button" onclick="scrollToCarousel()">Mulai Jelajah</button>
-        </div>
-        <button id="hero-prev-btn" class="hero-nav-btn prev">⮜</button>
-        <button id="hero-next-btn" class="hero-nav-btn next">⮞</button>
-        <a href="#animal-container-wrapper" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
-    </div>
-    
-    <div class="about-section-wrapper">
-        <h2 class="section-title">Tentang Kami: Proyek Konservasi</h2>
-        <div class="about-grid-container container">
-            <div class="about-item about-paragraph-1">
-                <p class="about-text text-left">
-                    Kalian tahu ga sih? Di Nusantara ini banyak banget hewan-hewan yang udah terancam punah! Padahal Indonesia terkenal banget dengan keanekaragaman hayatinya. Tapi sayangnya, populasi mereka sudah tidak banyak lagi.
-                </p>
+    <div id="main-content">
+        <div class="hero-section" id="hero-section">
+            <div class="hero-slider-container" id="hero-slider-container"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h2 id="hero-title" class="hero-title"></h2>
+                <p id="hero-subtitle" class="hero-subtitle"></p>
+                <button class="cta-button" onclick="scrollToCarousel()">Mulai Jelajah</button>
             </div>
-            <div class="about-item about-image-2">
-                <div class="about-image-box">
-                    <img src="images/about_2.jpg" alt="Gambar Ilustrasi Konservasi 2">
+            <button id="hero-prev-btn" class="hero-nav-btn prev">⮜</button>
+            <button id="hero-next-btn" class="hero-nav-btn next">⮞</button>
+            <a href="#animal-container-wrapper" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a>
+        </div>
+        
+        <div class="about-section-wrapper">
+            <h2 class="section-title">Tentang Kami: Proyek Konservasi</h2>
+            <div class="about-grid-container container">
+                <div class="about-item about-paragraph-1">
+                    <p class="about-text text-left">
+                        Kalian tahu ga sih? Di Nusantara ini banyak banget hewan-hewan yang udah terancam punah! Padahal Indonesia terkenal banget dengan keanekaragaman hayatinya. Tapi sayangnya, populasi mereka sudah tidak banyak lagi.
+                    </p>
+                </div>
+                <div class="about-item about-image-2">
+                    <div class="about-image-box">
+                        <img src="images/about_2.jpg" alt="Gambar Ilustrasi Konservasi 2">
+                    </div>
+                </div>
+                <div class="about-item about-image-1">
+                    <div class="about-image-box">
+                        <img src="images/about_1.jpg" alt="Gambar Ilustrasi Konservasi 1">
+                    </div>
+                </div>
+                <div class="about-item about-paragraph-2">
+                    <p class="about-text text-right">
+                        Mengapa hal ini penting? Dikarenakan tiap daerah di Indonesia punya cara unik buat menjaga alamnya. Misalnya, masyarakat adat di Kalimantan punya pantangan menebang pohon di sekitar sarang orangutan, atau di Papua, burung cenderawasih dianggap suci dan nggak boleh diburu. Itu semua bagian dari kearifan lokal yang udah ada sejak lama.
+                    </p>
+                </div>
+                <div class="about-item about-paragraph-3">
+                    <p class="about-text text-left">
+                        Jadi marilah kita telusuri, apa aja sih..hewan hewan di nusantara yang sudah terancam punah
+                    </p>
                 </div>
             </div>
-            <div class="about-item about-image-1">
-                <div class="about-image-box">
-                    <img src="images/about_1.jpg" alt="Gambar Ilustrasi Konservasi 1">
+        </div>
+
+        <div class="slider-wrapper" id="animal-container-wrapper">
+            <h2 class="section-title">Ensiklopedia</h2>
+            <main id="animal-container" class="container">
+            </main>
+            <button id="prev-btn" class="slider-nav-btn prev">⮜</button>
+            <button id="next-btn" class="slider-nav-btn next">⮞</button>
+        </div>
+
+        <div class="map-section-wrapper">
+            <h2 class="section-title">Jelajahi Habitat</h2>
+            <section class="map-section container">
+                <img src="penanda.png" alt="Peta Kepulauan Indonesia" class="map-image">
+                <a class="map-waypoint waypoint-1" data-label="Sumatra" data-location="Sumatra"></a>
+                <a class="map-waypoint waypoint-2" data-label="Jawa" data-location="Jawa"></a>
+                <a class="map-waypoint waypoint-3" data-label="Kalimantan" data-location="Kalimantan"></a>
+                <a class="map-waypoint waypoint-4" data-label="Sulawesi" data-location="Sulawesi"></a>
+                <a class="map-waypoint waypoint-5" data-label="Papua" data-location="Papua"></a>
+                <a class="map-waypoint waypoint-6" data-label="Perairan Indonesia" data-location="Perairan Indonesia"></a>
+                <a class="map-waypoint waypoint-7" data-label="Bali" data-location="Bali"></a>
+                <a class="map-waypoint waypoint-8" data-label="Nusa Tenggara" data-location="Nusa Tenggara"></a>
+            </section>
+        </div>
+        
+        <div class="quiz-section-wrapper">
+            <div class="quiz-container">
+                <h2 class="section-title">Tebak Hewan!</h2>
+                <p id="quiz-question">Fakta menarik tentang hewan akan muncul di sini.</p>
+                <div id="quiz-extra-hints"></div>
+                <div id="quiz-answer" class="quiz-answer-boxes"></div>
+                <p id="quiz-feedback"></p>
+                <input type="text" id="quiz-answer-input" placeholder="Ketik jawabanmu...">
+                <div class="quiz-buttons">
+                    <button id="quiz-submit-btn" class="cta-button">Tebak</button>
+                    <button id="quiz-hint-btn" class="cta-button secondary">Buka Petunjuk</button>
+                    <button id="quiz-show-answer-btn" class="cta-button secondary">Menyerah</button>
+                    <button id="quiz-next-btn" class="cta-button hidden">Pertanyaan Berikutnya</button>
                 </div>
             </div>
-            <div class="about-item about-paragraph-2">
-                <p class="about-text text-right">
-                    Mengapa hal ini penting? Dikarenakan tiap daerah di Indonesia punya cara unik buat menjaga alamnya. Misalnya, masyarakat adat di Kalimantan punya pantangan menebang pohon di sekitar sarang orangutan, atau di Papua, burung cenderawasih dianggap suci dan nggak boleh diburu. Itu semua bagian dari kearifan lokal yang udah ada sejak lama.
-                </p>
-            </div>
-            <div class="about-item about-paragraph-3">
-                <p class="about-text text-left">
-                    Jadi marilah kita telusuri, apa aja sih..hewan hewan di nusantara yang sudah terancam punah
-                </p>
-            </div>
         </div>
-    </div>
-
-    <div class="slider-wrapper" id="animal-container-wrapper">
-        <h2 class="section-title">Ensiklopedia</h2>
-        <main id="animal-container" class="container">
-        </main>
-        <button id="prev-btn" class="slider-nav-btn prev">⮜</button>
-        <button id="next-btn" class="slider-nav-btn next">⮞</button>
-    </div>
-
-    <div class="map-section-wrapper">
-        <h2 class="section-title">Jelajahi Habitat</h2>
-        <section class="map-section container">
-            <img src="penanda.png" alt="Peta Kepulauan Indonesia" class="map-image">
-            <a class="map-waypoint waypoint-1" data-label="Sumatra" data-location="Sumatra"></a>
-            <a class="map-waypoint waypoint-2" data-label="Jawa" data-location="Jawa"></a>
-            <a class="map-waypoint waypoint-3" data-label="Kalimantan" data-location="Kalimantan"></a>
-            <a class="map-waypoint waypoint-4" data-label="Sulawesi" data-location="Sulawesi"></a>
-            <a class="map-waypoint waypoint-5" data-label="Papua" data-location="Papua"></a>
-            <a class="map-waypoint waypoint-6" data-label="Perairan Indonesia" data-location="Perairan Indonesia"></a>
-            <a class="map-waypoint waypoint-7" data-label="Bali" data-location="Bali"></a>
-            <a class="map-waypoint waypoint-8" data-label="Nusa Tenggara" data-location="Nusa Tenggara"></a>
-        </section>
+        
+        <footer>
+            <p>Proyek Tugas oleh Francesco Alexander</p>
+        </footer>
     </div>
 
     <div id="location-list-page" class="location-list-page hidden">
@@ -101,24 +124,7 @@
                 </select>
                 <button id="reset-filter-btn" class="cta-button secondary">Reset Filter</button>
             </div>
-
             <div id="location-animal-list" class="location-animal-list-grid">
-                </div>
-        </div>
-    </div>
-    <div class="quiz-section-wrapper">
-        <div class="quiz-container">
-            <h2 class="section-title">Tebak Hewan!</h2>
-            <p id="quiz-question">Fakta menarik tentang hewan akan muncul di sini.</p>
-            <div id="quiz-extra-hints"></div>
-            <div id="quiz-answer" class="quiz-answer-boxes"></div>
-            <p id="quiz-feedback"></p>
-            <input type="text" id="quiz-answer-input" placeholder="Ketik jawabanmu...">
-            <div class="quiz-buttons">
-                <button id="quiz-submit-btn" class="cta-button">Tebak</button>
-                <button id="quiz-hint-btn" class="cta-button secondary">Buka Petunjuk</button>
-                <button id="quiz-show-answer-btn" class="cta-button secondary">Menyerah</button>
-                <button id="quiz-next-btn" class="cta-button hidden">Pertanyaan Berikutnya</button>
             </div>
         </div>
     </div>
@@ -129,10 +135,6 @@
             <div id="modal-body"></div>
         </div>
     </div>
-
-    <footer>
-        <p>Proyek Tugas oleh Francesco Alexander</p>
-    </footer>
 
     <div class="scroll-buttons">
         <button id="scrollTopBtn" class="scroll-btn">⭡</button>
