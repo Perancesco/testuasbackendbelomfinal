@@ -11,6 +11,9 @@ function scrollToCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
     const animalContainer = document.getElementById('animal-container'); 
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
@@ -243,19 +246,25 @@ document.addEventListener('DOMContentLoaded', () => {
         quizNextBtn.classList.remove('hidden');
     }
     
+    // --- START: FUNGSI OPEN MODAL DENGAN PERUBAHAN TATA LETAK ---
     function openModal(hewan) {
         const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5); // Ambil lebih banyak untuk carousel
         
         modalBody.innerHTML = `
-            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}">
+            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
             <h2>${hewan.nama || 'N/A'}</h2>
             <p class="nama-ilmiah">${hewan.namaIlmiah || 'N/A'}</p>
             <p>${hewan.deskripsi || 'N/A'}</p>
-            <div class="detail-grid">
-                <div class="detail-item"><h4>Status</h4><p>${hewan.statusKonservasi || 'N/A'}</p></div>
-                <div class="detail-item"><h4>Populasi</h4><p>${hewan.populasi || 'N/A'} (${hewan.tahunPencatatan || 'N/A'})</p></div>
-                <div class="detail-item"><h4>Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
-                <div class="detail-item"><h4>Kearifan Lokal</h4><p>${hewan.hubunganMasyarakat || 'N/A'}</p></div>
+            <div class="detail-grid-v2">
+                <div class="detail-group-left">
+                    <div class="detail-item-v2"><h4>Status</h4><p>${hewan.statusKonservasi || 'N/A'}</p></div>
+                    <div class="detail-item-v2"><h4>Populasi</h4><p>${hewan.populasi || 'N/A'} (${hewan.tahunPencatatan || 'N/A'})</p></div>
+                    <div class="detail-item-v2"><h4>Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
+                </div>
+                <div class="detail-item-right">
+                    <h4>Kearifan Lokal</h4>
+                    <p>${hewan.hubunganMasyarakat || 'N/A'}</p>
+                </div>
             </div>
             <div class="random-animals">
                 <h3>Lihat Juga</h3>
@@ -281,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initRandomCarousel(randomAnimals);
         }
     }
+    // --- END: FUNGSI OPEN MODAL DENGAN PERUBAHAN TATA LETAK ---
 
     // Fungsi untuk menginisialisasi carousel "Lihat Juga"
     function initRandomCarousel(animals) {

@@ -1,11 +1,15 @@
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
-  --bg-color: #FDFCF7;
-  --bg-color-darker: #F0EBE0;
-  --card-color: #FFFFFF;
+  --bg-color: #605b43;
+  --bg-color-darker: #b11b1b;
+  --card-color: #2d9e46;
   --primary-text: #074738;
   --secondary-text: #555555;
-  --accent-color: #CFF28F;
-  --border-color: #EAEAEA;
+  --accent-color: #773aac;
+  --border-color: #574c4c;
   --shadow: 0 4px 15px rgba(0,0,0,0.08);
   --glow: 0 0 15px rgba(138, 174, 84, 0.5);
 }
@@ -80,7 +84,7 @@ body {
 .map-waypoint:hover::before { animation: none; }
 .map-waypoint:hover::after { opacity: 1; top: -60px; }
 .waypoint-1 { top: 67%; left: 16%; } 
-.waypoint-2 { top: 72%; left: 50%; } 
+.waypoint-2 { top: 75%; left: 50%; } 
 .waypoint-3 { top: 51%; left: 34%; } 
 .waypoint-4 { top: 48%; left: 52%; } 
 .waypoint-5 { top: 45%; left: 83%; } 
@@ -108,10 +112,90 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; backdrop-filter: blur(5px); }
 .modal-content { background-color: var(--card-color); padding: 2.5rem; border-radius: 15px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
 .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2.5rem; background: none; border: none; cursor: pointer; color: var(--secondary-text); }
-.modal-body img { width: 100%; height: 350px; object-fit: cover; border-radius: 10px; margin-bottom: 1.5rem; }
+.modal-animal-image { /* Kelas baru untuk gambar modal, 80% dan responsive */
+    width: 80% ; 
+    height: auto ; 
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 auto 2.5rem auto;
+    display: block; 
+}
 .modal-body h2 { font-family: 'Lora', serif; color: var(--primary-text); font-size: 2.8rem; }
-.detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+
+/* --- START: STYLING UNTUK TATA LETAK DETAIL V2 --- */
+/* Detail Grid Utama (2 Kolom: Info Singkat | Kearifan Lokal) */
+.detail-grid-v2 {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* 1fr untuk data singkat, 1.5fr untuk Kearifan Lokal */
+    gap: 30px;
+    margin-top: 2rem;
+    align-items: start;
+}
+
+/* Kolom Kiri: Status, Populasi, Makanan (Sejajar ke Bawah) */
+.detail-group-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Jarak vertikal antar item dihilangkan karena jarak diatur di detail-item-v2 */
+}
+
+/* Setiap Baris Detail di Kolom Kiri (Label | Nilai) */
+.detail-item-v2 {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* 100px untuk label (Status/Makanan), 1fr untuk nilai */
+    gap: 10px;
+    align-items: center;
+    border-bottom: 1px dashed var(--border-color); /* Garis pemisah */
+    padding: 15px 0;
+}
+.detail-item-v2:first-child {
+    padding-top: 0;
+}
+.detail-item-v2:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.detail-item-v2 h4 {
+    margin: 0;
+    color: var(--primary-text);
+    font-weight: 600;
+}
+
+.detail-item-v2 p {
+    margin: 0;
+    color: var(--secondary-text);
+}
+
+/* Kolom Kanan: Kearifan Lokal */
+.detail-item-right {
+    background-color: var(--bg-color-darker);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.detail-item-right h4 {
+    color: var(--primary-text);
+    margin-top: 0;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.detail-item-right p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--secondary-text);
+}
+/* --- END: STYLING UNTUK TATA LETAK DETAIL V2 --- */
+
+
+/* Hapus atau biarkan styling lama ini, karena sudah digantikan oleh detail-grid-v2 */
+.detail-grid { 
+    display: none; 
+}
 .detail-item h4 { margin: 0; color: var(--primary-text); font-weight: 600; margin-bottom: 0.5rem; }
+
 
 /* Styles for "Lihat Juga" carousel in modal */
 .random-animals { margin-top: 3rem; position: relative; }
@@ -224,12 +308,15 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     .filter-controls { flex-direction: column; gap: 15px; }
     .filter-input, .filter-select, #reset-filter-btn { width: 100%; max-width: none; }
 
-    /* Adjust random animals for smaller screens */
-    .random-carousel-container { padding: 0 20px; }
-    .random-nav-btn.prev { left: 0px; }
-    .random-nav-btn.next { right: 0px; }
-    .random-card { flex: 0 0 100%; margin-right: 0; } /* Show one card at a time */
-    .random-grid { overflow-x: scroll; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-    .random-card { scroll-snap-align: start; }
-    .random-dots-container { display: none; } /* Hide dots on small screens if only 1 is shown */
+    /* Penyesuaian Detail Grid V2 untuk Mobile */
+    .detail-grid-v2 {
+        grid-template-columns: 1fr; /* Jadi 1 kolom di mobile */
+        gap: 20px;
+    }
+    .detail-item-v2 {
+        grid-template-columns: 80px 1fr; /* Sesuaikan lebar label di mobile */
+    }
+    .detail-item-right {
+        order: 1; /* Pindahkan Kearifan Lokal ke atas di mobile agar lebih mudah dibaca */
+    }
 }
