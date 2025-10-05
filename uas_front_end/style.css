@@ -77,12 +77,44 @@ body {
 .map-section-wrapper .section-title { display: inline-block; background-color: var(--card-color); padding: 0.5rem 2.5rem; border-radius: 30px; box-shadow: var(--shadow); font-size: 2.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
 .map-section { position: relative; max-width: 1000px; margin: 0 auto; text-align: center; }
 .map-image { width: 100%; height: auto; display: block; }
-.map-waypoint { position: absolute; width: 50px; height: 40px; background-image: url('Navigasi.png'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: transparent; border-radius: 0; cursor: pointer; z-index: 50; transition: transform 0.3s ease; transform: translate(-50%, -50%) scale(1); display: flex; justify-content: center; align-items: center; }
+.map-waypoint { 
+    position: absolute; 
+    width: 60px; /* Diperbesar dari 50px */
+    height: 50px; /* Diperbesar dari 40px */
+    background-image: url('Navigasi.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+    background-color: transparent; 
+    border-radius: 0; 
+    cursor: pointer; 
+    z-index: 50; 
+    transition: transform 0.3s ease; 
+    transform: translate(-50%, -50%) scale(1); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
 .map-waypoint::before { content: ''; position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border-radius: 50%; background-color: rgba(7, 71, 56, 0.5); animation: ripple-effect 1.5s infinite ease-out; z-index: -1; transform: translate(-50%, -50%) scale(0); }
-.map-waypoint::after { content: attr(data-label); position: absolute; top: -40px; left: 50%; transform: translateX(-50%); white-space: nowrap; background-color: var(--primary-text); color: var(--card-color); padding: 5px 10px; border-radius: 5px; font-size: 0.85rem; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
+.map-waypoint::after { 
+    content: attr(data-label); 
+    position: absolute; 
+    top: -50px; /* Disesuaikan */
+    left: 50%; 
+    transform: translateX(-50%); 
+    white-space: nowrap; 
+    background-color: var(--primary-text); 
+    color: var(--card-color); 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    font-size: 0.85rem; 
+    opacity: 0; 
+    pointer-events: none; 
+    transition: all 0.3s ease; 
+}
 .map-waypoint:hover { transform: translate(-50%, -50%) scale(1.1); background-color: transparent; }
 .map-waypoint:hover::before { animation: none; }
-.map-waypoint:hover::after { opacity: 1; top: -60px; }
+.map-waypoint:hover::after { opacity: 1; top: -70px; /* Disesuaikan */ }
 .waypoint-1 { top: 67%; left: 16%; } 
 .waypoint-2 { top: 75%; left: 50%; } 
 .waypoint-3 { top: 51%; left: 34%; } 
@@ -92,6 +124,27 @@ body {
 .waypoint-7 { top: 70%; left: 69%; } 
 .waypoint-8 { top: 60%; left: 80%; } 
 @keyframes ripple-effect { to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
+
+/* Style untuk tombol "Lihat Seluruh Lokasi" */
+.view-all-btn {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    padding: 12px 22px; 
+    font-size: 1.2rem; 
+    font-weight: 700;
+    border-radius: 30px;
+    background-color: var(--primary-text);
+    color: var(--card-color); 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 3px solid var(--accent-color);
+}
+.view-all-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: var(--glow);
+}
 
 .quiz-section-wrapper { width: 100%; padding: 4rem 0; }
 .quiz-container { max-width: 800px; margin: 0 auto; text-align: center; background-color: var(--card-color); padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 1rem; }
@@ -172,6 +225,7 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     background-color: var(--bg-color-darker);
     border-radius: 10px;
     border: 1px solid var(--border-color);
+    padding: 20px;
 }
 
 .detail-item-right h4 {
@@ -284,6 +338,9 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 .filter-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2rem; align-items: center; }
 .filter-input, .filter-select { padding: 0.7rem 1rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; color: var(--primary-text); background-color: var(--card-color); flex: 1 1 200px; min-width: 150px; }
 .filter-select { appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23074738" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.014 2.345 4 3.204 4h9.592c.859 0 1.319 1.014.753 1.658l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>'); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+.location-filter {
+    display: none;
+}
 
 @media (max-width: 1200px) {
     .slider-nav-btn.prev { left: 10px; }
@@ -300,9 +357,17 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     .about-image-box { width: 100%; height: 200px; }
     .about-text.text-right { text-align: left; border-left: 5px solid var(--accent-color); border-right: none; }
     .slider-nav-btn, .hero-nav-btn { width: 40px; height: 40px; font-size: 1.2rem; }
-    .map-waypoint { width: 40px; height: 40px; } 
-    .map-waypoint::after { font-size: 0.75rem; top: -30px; }
-    .map-waypoint:hover::after { top: -40px; }
+    .map-waypoint { 
+        width: 50px; /* Diperbesar dari 40px */
+        height: 50px; /* Diperbesar dari 40px */ 
+    } 
+    .map-waypoint::after { 
+        font-size: 0.75rem; 
+        top: -40px; /* Disesuaikan dari -30px */
+    }
+    .map-waypoint:hover::after { 
+        top: -50px; /* Disesuaikan dari -40px */
+    }
     .letter-box { width: 25px; height: 35px; font-size: 1.5rem; gap: 5px; }
     .letter-space { width: 10px; }
     .filter-controls { flex-direction: column; gap: 15px; }
@@ -318,5 +383,8 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     }
     .detail-item-right {
         order: 1; /* Pindahkan Kearifan Lokal ke atas di mobile agar lebih mudah dibaca */
+    }
+    .view-all-btn {
+        bottom: -80px; /* Sesuaikan posisi di mobile */
     }
 }

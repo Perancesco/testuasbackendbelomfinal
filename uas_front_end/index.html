@@ -25,7 +25,7 @@
             <a href="#about-section" id="scroll-to-content-btn" class="scroll-down-indicator">⭣</a> 
         </div>
         
-        <div class="about-section-wrapper">
+        <div class="about-section-wrapper" id="about-section">
             <h2 class="section-title">Tentang Kami: Proyek Konservasi</h2>
             <div class="about-grid-container container">
                 <div class="about-item about-paragraph-1">
@@ -64,7 +64,7 @@
             <button id="next-btn" class="slider-nav-btn next">⮞</button>
         </div>
 
-        <div class="map-section-wrapper">
+        <div class="map-section-wrapper" id="map-section-wrapper">
             <h2 class="section-title">Jelajahi Habitat</h2>
             <section class="map-section container">
                 <img src="penanda.png" alt="Peta Kepulauan Indonesia" class="map-image">
@@ -76,6 +76,7 @@
                 <a class="map-waypoint waypoint-6" data-label="Perairan Indonesia" data-location="Perairan Indonesia"></a>
                 <a class="map-waypoint waypoint-7" data-label="Bali" data-location="Bali"></a>
                 <a class="map-waypoint waypoint-8" data-label="Nusa Tenggara" data-location="Nusa Tenggara"></a>
+                <button id="view-all-locations-btn" class="cta-button primary view-all-btn">Lihat Seluruh Lokasi</button>
             </section>
         </div>
         
@@ -113,6 +114,9 @@
                     <option value="Karnivora">Karnivora</option>
                     <option value="Herbivora">Herbivora</option>
                     <option value="Omnivora">Omnivora</option>
+                </select>
+                <select id="filter-lokasi" class="filter-select location-filter">
+                    <option value="">Semua Lokasi</option>
                 </select>
                 <select id="filter-populasi" class="filter-select">
                     <option value="">Semua Status Konservasi</option>
