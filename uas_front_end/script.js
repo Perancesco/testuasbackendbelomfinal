@@ -124,9 +124,28 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'carousel-item';
             const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
-            card.innerHTML = `
-                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
-                <div class="card-content"><h3>${hewan.nama || ''}</h3><p>${(hewan.deskripsi || '').substring(0, 70)}...</p></div>`;
+
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+            const img = document.createElement('img');
+            img.src = hewan.gambar || '';
+            img.alt = hewan.nama || '';
+            img.onerror = () => {
+                imageWrapper.style.display = 'none';
+            };
+            imageWrapper.appendChild(img);
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            const h3 = document.createElement('h3');
+            h3.textContent = hewan.nama || '';
+            const p = document.createElement('p');
+            p.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
+            cardContent.appendChild(h3);
+            cardContent.appendChild(p);
+
+            card.appendChild(imageWrapper);
+            card.appendChild(cardContent);
             track.appendChild(card);
         });
         animalContainer.appendChild(track);
@@ -277,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     class="absolute top-4 right-20 bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition-colors"
                     data-id="${uniqueId}">Hapus</button>
             </div>
-            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
+            <img src="" alt="${hewan.nama || ''}" class="modal-animal-image">
             <h2>${hewan.nama || 'N/A'}</h2>
             <p class="nama-ilmiah"><i>${hewan.namaIlmiah || 'N/A'}</i></p> 
             <p>${hewan.deskripsi || 'N/A'}</p>
@@ -309,6 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="random-dots-container"></div>
             </div>
         `;
+
+        const modalImage = modalBody.querySelector('.modal-animal-image');
+        modalImage.src = hewan.gambar || 'images/placeholder.png';
+
         modal.style.display = 'flex';
 
         document.getElementById('delete-animal-btn').addEventListener('click', function() {
@@ -444,15 +467,42 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'location-card';
             const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
-            card.innerHTML = `
-                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
-                <div class="card-content">
-                    <h3>${hewan.nama || ''}</h3>
-                    <p class="short-desc">${(hewan.deskripsi || '').substring(0, 100)}...</p>
-                    <p class="short-desc"><strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}</p>
-                    <p class="short-desc"><strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}</p>
-                </div>
-            `;
+            
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+            const img = document.createElement('img');
+            img.src = hewan.gambar || '';
+            img.alt = hewan.nama || '';
+            img.onerror = () => {
+                imageWrapper.style.display = 'none';
+            };
+            imageWrapper.appendChild(img);
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            
+            const h3 = document.createElement('h3');
+            h3.textContent = hewan.nama || '';
+
+            const p1 = document.createElement('p');
+            p1.className = 'short-desc';
+            p1.textContent = `${(hewan.deskripsi || '').substring(0, 100)}...`;
+
+            const p2 = document.createElement('p');
+            p2.className = 'short-desc';
+            p2.innerHTML = `<strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}`;
+
+            const p3 = document.createElement('p');
+            p3.className = 'short-desc';
+            p3.innerHTML = `<strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}`;
+
+            cardContent.appendChild(h3);
+            cardContent.appendChild(p1);
+            cardContent.appendChild(p2);
+            cardContent.appendChild(p3);
+
+            card.appendChild(imageWrapper);
+            card.appendChild(cardContent);
             locationAnimalList.appendChild(card);
         });
         
@@ -578,6 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataHewan.unshift(animal);
             addAnimalModal.style.display = 'none';
             resetAddAnimalForm();
+            document.body.classList.remove('modal-open');
             loadAllAnimals();
             loadUniqueLocations();
             if (!locationListPage.classList.contains('hidden')) {
@@ -587,12 +638,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (imageFile && imageFile.size > 0) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                newAnimal.gambar = reader.result;
-                addAndRefresh(newAnimal);
-            };
-            reader.readAsDataURL(imageFile);
+            newAnimal.gambar = URL.createObjectURL(imageFile);
+            addAndRefresh(newAnimal);
         } else if (imageUrl) {
             newAnimal.gambar = imageUrl;
             addAndRefresh(newAnimal);
