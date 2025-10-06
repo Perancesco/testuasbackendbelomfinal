@@ -42,6 +42,7 @@
                 },
             },
         };
+    </script>};
     </script>
     <style>
         body {
@@ -246,7 +247,14 @@
                 </div>
                 <div class="relative">
                     <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">shield</span>
-                    <input name="statusKonservasi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Status Konservasi" type="text"/>
+                    <select name="statusKonservasi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500">
+                        <option value="" disabled selected>Pilih Status Konservasi</option>
+                        <option value="Kritis">Kritis</option>
+                        <option value="Terancam">Terancam</option>
+                        <option value="Rentan">Rentan</option>
+                        <option value="Hampir Terancam">Hampir Terancam</option>
+                        <option value="Tidak Diketahui">Tidak Diketahui</option>
+                    </select>
                 </div>
                 <div class="bg-purple-50 dark:bg-purple-900/50 p-4 rounded-lg flex items-start space-x-3">
                     <div class="bg-blue-100 dark:bg-blue-900/50 rounded-full p-2">
@@ -271,7 +279,12 @@
                 </div>
                 <div class="relative">
                     <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">local_dining</span>
-                    <input name="tipeMakanan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Tipe Makanan" type="text"/>
+                    <select name="tipeMakanan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500">
+                        <option value="" disabled selected>Pilih Tipe Makanan</option>
+                        <option value="Karnivora">Karnivora</option>
+                        <option value="Herbivora">Herbivora</option>
+                        <option value="Omnivora">Omnivora</option>
+                    </select>
                 </div>
                 <div class="relative">
                     <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">link</span>
@@ -282,16 +295,7 @@
                     <textarea name="hubunganMasyarakat" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Kearifan Lokal" rows="3"></textarea>
                 </div>
                 <button type="submit" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
-                    <span class="material-icons">save</span>
-                    <span>Simpan Perubahan</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div class="scroll-buttons">
-        <button id="scrollTopBtn" class="scroll-btn">⭡</button>
-        <button id="scrollBottomBtn" class="scroll-btn">⭣</button>
+ass="scroll-btn">⭣</button>
     </div>
 
     <script src="data.js"></script>

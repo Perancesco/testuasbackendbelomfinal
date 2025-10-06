@@ -365,8 +365,6 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 .location-list-page {
     width: 100%;
     padding: 2rem 0 4rem 0;
-    max-height: 80vh; /* Set max height to 80% of viewport */
-    overflow-y: auto; /* Enable vertical scrolling for the whole section */
     background-color: transparent; /* Make background transparent */
     box-sizing: border-box; /* Ensure padding is included in height calculation */
 }

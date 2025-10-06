@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadPlaceholder = document.getElementById('upload-placeholder');
     const deleteImageBtn = document.getElementById('delete-image-btn');
     let currentFilteredLocation = ''; 
+    let currentEditingAnimal = null;
 
     let currentIndex = 0;
     let currentlyDisplayedAnimals = [];
@@ -124,9 +125,28 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'carousel-item';
             const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
-            card.innerHTML = `
-                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
-                <div class="card-content"><h3>${hewan.nama || ''}</h3><p>${(hewan.deskripsi || '').substring(0, 70)}...</p></div>`;
+
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+            const img = document.createElement('img');
+            img.src = hewan.gambar || '';
+            img.alt = hewan.nama || '';
+            img.onerror = () => {
+                imageWrapper.style.display = 'none';
+            };
+            imageWrapper.appendChild(img);
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            const h3 = document.createElement('h3');
+            h3.textContent = hewan.nama || '';
+            const p = document.createElement('p');
+            p.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
+            cardContent.appendChild(h3);
+            cardContent.appendChild(p);
+
+            card.appendChild(imageWrapper);
+            card.appendChild(cardContent);
             track.appendChild(card);
         });
         animalContainer.appendChild(track);
@@ -273,11 +293,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalBody.innerHTML = `
             <div class="modal-header-controls">
+                 <button id="edit-animal-btn" 
+                    class="absolute top-4 right-40 bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+                    data-id="${uniqueId}">Edit</button>
                  <button id="delete-animal-btn" 
                     class="absolute top-4 right-20 bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition-colors"
                     data-id="${uniqueId}">Hapus</button>
             </div>
-            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
+            <img src="" alt="${hewan.nama || ''}" class="modal-animal-image">
             <h2>${hewan.nama || 'N/A'}</h2>
             <p class="nama-ilmiah"><i>${hewan.namaIlmiah || 'N/A'}</i></p> 
             <p>${hewan.deskripsi || 'N/A'}</p>
@@ -309,7 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="random-dots-container"></div>
             </div>
         `;
+
+        const modalImage = modalBody.querySelector('.modal-animal-image');
+        modalImage.src = hewan.gambar || 'images/placeholder.png';
+
         modal.style.display = 'flex';
+
+        document.getElementById('edit-animal-btn').addEventListener('click', () => handleEditClick(hewan));
 
         document.getElementById('delete-animal-btn').addEventListener('click', function() {
             const animalIdToDelete = this.dataset.id;
@@ -330,6 +359,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (randomAnimals.length > randomItemsPerView) {
             initRandomCarousel(randomAnimals);
         }
+    }
+
+    function handleEditClick(hewan) {
+        modal.style.display = 'none';
+        openEditModal(hewan);
+    }
+
+    function openEditModal(hewan) {
+        currentEditingAnimal = hewan;
+        const form = addAnimalForm;
+        form.querySelector('[name="nama"]').value = hewan.nama || '';
+        form.querySelector('[name="namaIlmiah"]').value = hewan.namaIlmiah || '';
+        form.querySelector('[name="deskripsi"]').value = hewan.deskripsi || '';
+        form.querySelector('[name="lokasi"]').value = hewan.lokasi || '';
+        form.querySelector('[name="statusKonservasi"]').value = hewan.statusKonservasi || '';
+        form.querySelector('[name="populasi"]').value = hewan.populasi || '';
+        form.querySelector('[name="tahunPencatatan"]').value = hewan.tahunPencatatan || '';
+        form.querySelector('[name="makanan"]').value = hewan.makanan || '';
+        form.querySelector('[name="tipeMakanan"]').value = hewan.tipeMakanan || '';
+        form.querySelector('[name="hubunganMasyarakat"]').value = hewan.hubunganMasyarakat || '';
+        form.querySelector('[name="gambar"]').value = ''; // Clear URL field
+
+        // Handle image preview
+        if (hewan.gambar) {
+            imagePreview.src = hewan.gambar;
+            imagePreview.classList.remove('hidden');
+            uploadPlaceholder.classList.add('hidden');
+            deleteImageBtn.classList.remove('hidden');
+        } else {
+            imagePreview.src = '#';
+            imagePreview.classList.add('hidden');
+            uploadPlaceholder.classList.remove('hidden');
+            deleteImageBtn.classList.add('hidden');
+        }
+        gambarFileInput.value = '';
+
+        addAnimalModal.querySelector('h1').textContent = 'Edit Hewan';
+        addAnimalModal.style.display = 'flex';
+        document.body.classList.add('modal-open');
     }
 
     // Fungsi untuk menginisialisasi carousel "Lihat Juga"
@@ -444,15 +512,42 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'location-card';
             const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
-            card.innerHTML = `
-                <div class="image-wrapper"><img src="${hewan.gambar || ''}" alt="${hewan.nama || ''}" onerror="this.parentElement.style.display='none'"></div>
-                <div class="card-content">
-                    <h3>${hewan.nama || ''}</h3>
-                    <p class="short-desc">${(hewan.deskripsi || '').substring(0, 100)}...</p>
-                    <p class="short-desc"><strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}</p>
-                    <p class="short-desc"><strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}</p>
-                </div>
-            `;
+            
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+            const img = document.createElement('img');
+            img.src = hewan.gambar || '';
+            img.alt = hewan.nama || '';
+            img.onerror = () => {
+                imageWrapper.style.display = 'none';
+            };
+            imageWrapper.appendChild(img);
+
+            const cardContent = document.createElement('div');
+            cardContent.className = 'card-content';
+            
+            const h3 = document.createElement('h3');
+            h3.textContent = hewan.nama || '';
+
+            const p1 = document.createElement('p');
+            p1.className = 'short-desc';
+            p1.textContent = `${(hewan.deskripsi || '').substring(0, 100)}...`;
+
+            const p2 = document.createElement('p');
+            p2.className = 'short-desc';
+            p2.innerHTML = `<strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}`;
+
+            const p3 = document.createElement('p');
+            p3.className = 'short-desc';
+            p3.innerHTML = `<strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}`;
+
+            cardContent.appendChild(h3);
+            cardContent.appendChild(p1);
+            cardContent.appendChild(p2);
+            cardContent.appendChild(p3);
+
+            card.appendChild(imageWrapper);
+            card.appendChild(cardContent);
             locationAnimalList.appendChild(card);
         });
         
@@ -531,9 +626,12 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadPlaceholder.classList.remove('hidden');
         deleteImageBtn.classList.add('hidden');
         gambarFileInput.value = '';
+        addAnimalModal.querySelector('h1').textContent = 'Tambah Hewan Baru';
+        currentEditingAnimal = null;
     }
 
     addAnimalBtn.addEventListener('click', () => {
+        resetAddAnimalForm(); // Ensures form is clean for adding
         addAnimalModal.style.display = 'flex';
         document.body.classList.add('modal-open');
     });
@@ -559,45 +657,66 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageFile = formData.get('gambarFile');
         const imageUrl = formData.get('gambar');
 
-        const newAnimal = {
-            nama: formData.get('nama'),
-            namaIlmiah: formData.get('namaIlmiah'),
-            lokasi: formData.get('lokasi'),
-            statusKonservasi: formData.get('statusKonservasi'),
-            deskripsi: formData.get('deskripsi'),
-            populasi: formData.get('populasi'),
-            tahunPencatatan: formData.get('tahunPencatatan'),
-            kebiasaanUnik: "Data tidak tersedia",
-            makanan: formData.get('makanan'),
-            tipeMakanan: formData.get('tipeMakanan'),
-            hubunganMasyarakat: formData.get('hubunganMasyarakat'),
-            gambar: '',
-        };
-
-        const addAndRefresh = (animal) => {
-            dataHewan.unshift(animal);
-            addAnimalModal.style.display = 'none';
-            resetAddAnimalForm();
-            loadAllAnimals();
-            loadUniqueLocations();
-            if (!locationListPage.classList.contains('hidden')) {
-                applyFilters();
-            }
-            alert('Hewan baru berhasil ditambahkan!');
-        };
-
+        let imageToSave = '';
         if (imageFile && imageFile.size > 0) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                newAnimal.gambar = reader.result;
-                addAndRefresh(newAnimal);
-            };
-            reader.readAsDataURL(imageFile);
+            imageToSave = URL.createObjectURL(imageFile);
         } else if (imageUrl) {
-            newAnimal.gambar = imageUrl;
-            addAndRefresh(newAnimal);
+            imageToSave = imageUrl;
+        } else if (currentEditingAnimal) {
+            // In edit mode and no new image, keep the old one
+            imageToSave = currentEditingAnimal.gambar;
+        }
+
+        if (currentEditingAnimal) {
+            // --- EDIT MODE ---
+            const index = dataHewan.findIndex(h => h === currentEditingAnimal);
+            if (index > -1) {
+                // Create a new object to avoid issues with references
+                const updatedAnimal = {
+                    ...dataHewan[index],
+                    nama: formData.get('nama'),
+                    namaIlmiah: formData.get('namaIlmiah'),
+                    lokasi: formData.get('lokasi'),
+                    statusKonservasi: formData.get('statusKonservasi'),
+                    deskripsi: formData.get('deskripsi'),
+                    populasi: formData.get('populasi'),
+                    tahunPencatatan: formData.get('tahunPencatatan'),
+                    makanan: formData.get('makanan'),
+                    tipeMakanan: formData.get('tipeMakanan'),
+                    hubunganMasyarakat: formData.get('hubunganMasyarakat'),
+                    gambar: imageToSave,
+                };
+                dataHewan[index] = updatedAnimal;
+                alert('Data hewan berhasil diperbarui!');
+            }
         } else {
-            addAndRefresh(newAnimal);
+            // --- ADD MODE ---
+            const newAnimal = {
+                nama: formData.get('nama'),
+                namaIlmiah: formData.get('namaIlmiah'),
+                lokasi: formData.get('lokasi'),
+                statusKonservasi: formData.get('statusKonservasi'),
+                deskripsi: formData.get('deskripsi'),
+                populasi: formData.get('populasi'),
+                tahunPencatatan: formData.get('tahunPencatatan'),
+                kebiasaanUnik: "Data tidak tersedia",
+                makanan: formData.get('makanan'),
+                tipeMakanan: formData.get('tipeMakanan'),
+                hubunganMasyarakat: formData.get('hubunganMasyarakat'),
+                gambar: imageToSave,
+            };
+            dataHewan.unshift(newAnimal);
+            alert('Hewan baru berhasil ditambahkan!');
+        }
+
+        // Common cleanup and refresh
+        addAnimalModal.style.display = 'none';
+        resetAddAnimalForm(); // This already resets currentEditingAnimal to null
+        document.body.classList.remove('modal-open');
+        loadAllAnimals();
+        loadUniqueLocations();
+        if (!locationListPage.classList.contains('hidden')) {
+            applyFilters();
         }
     });
 
