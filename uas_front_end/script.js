@@ -62,10 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAnimalModal = document.getElementById('add-animal-modal');
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
-    const gambarFileInput = document.getElementById('gambarFile');
-    const imagePreview = document.getElementById('image-preview');
-    const uploadPlaceholder = document.getElementById('upload-placeholder');
-    const deleteImageBtn = document.getElementById('delete-image-btn');
     let currentFilteredLocation = ''; 
     let currentEditingAnimal = null;
 
@@ -379,21 +375,8 @@ document.addEventListener('DOMContentLoaded', () => {
         form.querySelector('[name="makanan"]').value = hewan.makanan || '';
         form.querySelector('[name="tipeMakanan"]').value = hewan.tipeMakanan || '';
         form.querySelector('[name="hubunganMasyarakat"]').value = hewan.hubunganMasyarakat || '';
-        form.querySelector('[name="gambar"]').value = ''; // Clear URL field
-
-        // Handle image preview
-        if (hewan.gambar) {
-            imagePreview.src = hewan.gambar;
-            imagePreview.classList.remove('hidden');
-            uploadPlaceholder.classList.add('hidden');
-            deleteImageBtn.classList.remove('hidden');
-        } else {
-            imagePreview.src = '#';
-            imagePreview.classList.add('hidden');
-            uploadPlaceholder.classList.remove('hidden');
-            deleteImageBtn.classList.add('hidden');
-        }
-        gambarFileInput.value = '';
+        // Pre-fill the URL field with the existing image URL
+        form.querySelector('[name="gambar"]').value = hewan.gambar || '';
 
         addAnimalModal.querySelector('h1').textContent = 'Edit Hewan';
         addAnimalModal.style.display = 'flex';
@@ -596,36 +579,10 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi);
     }
 
-    gambarFileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                imagePreview.classList.remove('hidden');
-                uploadPlaceholder.classList.add('hidden');
-                deleteImageBtn.classList.remove('hidden');
-            }
-            reader.readAsDataURL(file);
-        } 
-    });
-
-    deleteImageBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        imagePreview.src = '#';
-        imagePreview.classList.add('hidden');
-        uploadPlaceholder.classList.remove('hidden');
-        deleteImageBtn.classList.add('hidden');
-        gambarFileInput.value = '';
-    });
+    
 
     function resetAddAnimalForm() {
         addAnimalForm.reset();
-        imagePreview.src = '#';
-        imagePreview.classList.add('hidden');
-        uploadPlaceholder.classList.remove('hidden');
-        deleteImageBtn.classList.add('hidden');
-        gambarFileInput.value = '';
         addAnimalModal.querySelector('h1').textContent = 'Tambah Hewan Baru';
         currentEditingAnimal = null;
     }
@@ -654,16 +611,11 @@ document.addEventListener('DOMContentLoaded', () => {
     addAnimalForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(addAnimalForm);
-        const imageFile = formData.get('gambarFile');
         const imageUrl = formData.get('gambar');
 
-        let imageToSave = '';
-        if (imageFile && imageFile.size > 0) {
-            imageToSave = URL.createObjectURL(imageFile);
-        } else if (imageUrl) {
-            imageToSave = imageUrl;
-        } else if (currentEditingAnimal) {
-            // In edit mode and no new image, keep the old one
+        let imageToSave = imageUrl;
+
+        if (currentEditingAnimal && !imageUrl) {
             imageToSave = currentEditingAnimal.gambar;
         }
 
@@ -671,7 +623,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // --- EDIT MODE ---
             const index = dataHewan.findIndex(h => h === currentEditingAnimal);
             if (index > -1) {
-                // Create a new object to avoid issues with references
                 const updatedAnimal = {
                     ...dataHewan[index],
                     nama: formData.get('nama'),
