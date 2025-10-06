@@ -209,17 +209,24 @@
                     <span class="material-icons">close</span>
                 </button>
             </div>
-            <div class="relative w-32 h-32 mx-auto mb-6">
-                <div class="w-full h-full rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center border-2 border-dashed border-purple-300 dark:border-purple-700">
-                    <div class="text-center">
-                        <span class="material-icons text-4xl text-purple-400 dark:text-purple-500">pets</span>
-                        <p class="text-xs text-purple-600 dark:text-purple-400 mt-1">Upload Foto</p>
+            <label for="gambarFile" class="cursor-pointer">
+                <div id="image-preview-container" class="relative w-32 h-32 mx-auto mb-6">
+                    <div class="w-full h-full rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center border-2 border-dashed border-purple-300 dark:border-purple-700 overflow-hidden">
+                        <div id="upload-placeholder" class="text-center">
+                            <span class="material-icons text-4xl text-purple-400 dark:text-purple-500">pets</span>
+                            <p class="text-xs text-purple-600 dark:text-purple-400 mt-1">Upload Foto</p>
+                        </div>
+                        <img id="image-preview" src="#" alt="Image Preview" class="hidden w-full h-full object-cover"/>
+                    </div>
+                    <button id="delete-image-btn" class="hidden absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 shadow-md">
+                        <span class="material-icons text-base">close</span>
+                    </button>
+                    <div class="absolute bottom-0 right-0 bg-white dark:bg-slate-700 rounded-full p-2 shadow-md">
+                        <span class="material-icons text-purple-500">photo_camera</span>
                     </div>
                 </div>
-                <button class="absolute bottom-0 right-0 bg-white dark:bg-slate-700 rounded-full p-2 shadow-md">
-                    <span class="material-icons text-purple-500">photo_camera</span>
-                </button>
-            </div>
+            </label>
+            <input id="gambarFile" name="gambarFile" type="file" accept="image/*" class="sr-only"/>
             <form id="add-animal-form" class="space-y-4">
                 <div class="relative">
                     <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">pets</span>
@@ -267,8 +274,12 @@
                     <input name="tipeMakanan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Tipe Makanan" type="text"/>
                 </div>
                 <div class="relative">
-                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">image</span>
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">link</span>
                     <input name="gambar" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="URL Gambar" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-5 text-icon-light dark:text-icon-dark">groups</span>
+                    <textarea name="hubunganMasyarakat" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Kearifan Lokal" rows="3"></textarea>
                 </div>
                 <button type="submit" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
                     <span class="material-icons">save</span>

@@ -62,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAnimalModal = document.getElementById('add-animal-modal');
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
+    const gambarFileInput = document.getElementById('gambarFile');
+    const imagePreview = document.getElementById('image-preview');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const deleteImageBtn = document.getElementById('delete-image-btn');
     let currentFilteredLocation = ''; 
 
     let currentIndex = 0;
@@ -263,11 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
         quizNextBtn.classList.remove('hidden');
     }
     
-    // --- START: FUNGSI OPEN MODAL DENGAN PERUBAHAN TATA LETAK ---
     function openModal(hewan) {
-        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5); // Ambil lebih banyak untuk carousel
-        
+        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5);
+        const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
+
         modalBody.innerHTML = `
+            <div class="modal-header-controls">
+                 <button id="delete-animal-btn" 
+                    class="absolute top-4 right-20 bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition-colors"
+                    data-id="${uniqueId}">Hapus</button>
+            </div>
             <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
             <h2>${hewan.nama || 'N/A'}</h2>
             <p class="nama-ilmiah"><i>${hewan.namaIlmiah || 'N/A'}</i></p> 
@@ -302,12 +311,26 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         modal.style.display = 'flex';
 
-        // Inisialisasi carousel "Lihat Juga"
+        document.getElementById('delete-animal-btn').addEventListener('click', function() {
+            const animalIdToDelete = this.dataset.id;
+            if (confirm(`Apakah Anda yakin ingin menghapus data ${hewan.nama}?`)) {
+                const animalIndex = dataHewan.findIndex(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalIdToDelete);
+                if (animalIndex > -1) {
+                    dataHewan.splice(animalIndex, 1);
+                    modal.style.display = 'none';
+                    loadAllAnimals();
+                    if (!locationListPage.classList.contains('hidden')) {
+                        applyFilters();
+                    }
+                    alert('Data hewan berhasil dihapus.');
+                }
+            }
+        });
+
         if (randomAnimals.length > randomItemsPerView) {
             initRandomCarousel(randomAnimals);
         }
     }
-    // --- END: FUNGSI OPEN MODAL DENGAN PERUBAHAN TATA LETAK ---
 
     // Fungsi untuk menginisialisasi carousel "Lihat Juga"
     function initRandomCarousel(animals) {
@@ -478,36 +501,93 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi);
     }
 
+    gambarFileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden');
+                uploadPlaceholder.classList.add('hidden');
+                deleteImageBtn.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } 
+    });
+
+    deleteImageBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        imagePreview.src = '#';
+        imagePreview.classList.add('hidden');
+        uploadPlaceholder.classList.remove('hidden');
+        deleteImageBtn.classList.add('hidden');
+        gambarFileInput.value = '';
+    });
+
+    function resetAddAnimalForm() {
+        addAnimalForm.reset();
+        imagePreview.src = '#';
+        imagePreview.classList.add('hidden');
+        uploadPlaceholder.classList.remove('hidden');
+        deleteImageBtn.classList.add('hidden');
+        gambarFileInput.value = '';
+    }
+
     addAnimalBtn.addEventListener('click', () => {
         addAnimalModal.style.display = 'flex';
     });
 
     closeAddAnimalModalBtn.addEventListener('click', () => {
         addAnimalModal.style.display = 'none';
+        resetAddAnimalForm();
     });
 
     addAnimalForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(addAnimalForm);
+        const imageFile = formData.get('gambarFile');
+        const imageUrl = formData.get('gambar');
+
         const newAnimal = {
             nama: formData.get('nama'),
             namaIlmiah: formData.get('namaIlmiah'),
             lokasi: formData.get('lokasi'),
             statusKonservasi: formData.get('statusKonservasi'),
             deskripsi: formData.get('deskripsi'),
-            gambar: formData.get('gambar'),
             populasi: formData.get('populasi'),
             tahunPencatatan: formData.get('tahunPencatatan'),
-            kebiasaanUnik: formData.get('kebiasaanUnik'),
+            kebiasaanUnik: "Data tidak tersedia",
             makanan: formData.get('makanan'),
             tipeMakanan: formData.get('tipeMakanan'),
             hubunganMasyarakat: formData.get('hubunganMasyarakat'),
+            gambar: '',
         };
-        dataHewan.push(newAnimal);
-        addAnimalModal.style.display = 'none';
-        addAnimalForm.reset();
-        loadAllAnimals();
-        loadUniqueLocations();
+
+        const addAndRefresh = (animal) => {
+            dataHewan.unshift(animal);
+            addAnimalModal.style.display = 'none';
+            resetAddAnimalForm();
+            loadAllAnimals();
+            loadUniqueLocations();
+            if (!locationListPage.classList.contains('hidden')) {
+                applyFilters();
+            }
+            alert('Hewan baru berhasil ditambahkan!');
+        };
+
+        if (imageFile && imageFile.size > 0) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                newAnimal.gambar = reader.result;
+                addAndRefresh(newAnimal);
+            };
+            reader.readAsDataURL(imageFile);
+        } else if (imageUrl) {
+            newAnimal.gambar = imageUrl;
+            addAndRefresh(newAnimal);
+        } else {
+            addAndRefresh(newAnimal);
+        }
     });
 
 
@@ -537,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
         if (hewan) openModal(hewan);
     });
     
@@ -617,4 +697,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     scrollBottomBtn.addEventListener("click", () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollBtnContainer = document.querySelector('.scroll-buttons');
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', function() {
+        let st = window.pageYOffset || document.documentElement.scrollTop;
+        if (st > lastScrollTop) {
+            // Scroll ke bawah
+            scrollBtnContainer.style.bottom = '20px'; // Tampilkan
+        } else {
+            // Scroll ke atas
+            scrollBtnContainer.style.bottom = '-100px'; // Sembunyikan
+        }
+        lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    }, false);
 });
