@@ -58,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetFilterBtn = document.getElementById('reset-filter-btn');
     const viewAllLocationsBtn = document.getElementById('view-all-locations-btn'); 
     const scrollToContentBtn = document.getElementById('scroll-to-content-btn'); // Dapatkan elemen panah
+    const addAnimalBtn = document.getElementById('add-animal-btn');
+    const addAnimalModal = document.getElementById('add-animal-modal');
+    const addAnimalForm = document.getElementById('add-animal-form');
+    const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
     let currentFilteredLocation = ''; 
 
     let currentIndex = 0;
@@ -473,6 +477,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const populasi = filterPopulasi.value;
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi);
     }
+
+    addAnimalBtn.addEventListener('click', () => {
+        addAnimalModal.style.display = 'flex';
+    });
+
+    closeAddAnimalModalBtn.addEventListener('click', () => {
+        addAnimalModal.style.display = 'none';
+    });
+
+    addAnimalForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(addAnimalForm);
+        const newAnimal = {
+            nama: formData.get('nama'),
+            namaIlmiah: formData.get('namaIlmiah'),
+            lokasi: formData.get('lokasi'),
+            statusKonservasi: formData.get('statusKonservasi'),
+            deskripsi: formData.get('deskripsi'),
+            gambar: formData.get('gambar'),
+            populasi: formData.get('populasi'),
+            tahunPencatatan: formData.get('tahunPencatatan'),
+            kebiasaanUnik: formData.get('kebiasaanUnik'),
+            makanan: formData.get('makanan'),
+            tipeMakanan: formData.get('tipeMakanan'),
+            hubunganMasyarakat: formData.get('hubunganMasyarakat'),
+        };
+        dataHewan.push(newAnimal);
+        addAnimalModal.style.display = 'none';
+        addAnimalForm.reset();
+        loadAllAnimals();
+        loadUniqueLocations();
+    });
 
 
     createHeroSlides();
