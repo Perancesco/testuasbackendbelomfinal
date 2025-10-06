@@ -10,7 +10,6 @@ function scrollToCarousel() {
     window.scrollTo({ top: offsetPosition, behavior: "smooth" });
 }
 
-// Fungsi baru untuk menggulir ke About Section
 function scrollToAboutSection() {
     const aboutSection = document.getElementById('about-section');
     if (aboutSection) {
@@ -21,9 +20,11 @@ function scrollToAboutSection() {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    
     setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 50);
+
     const animalContainer = document.getElementById('animal-container'); 
     const modal = document.getElementById('detail-modal');
     const modalBody = document.getElementById('modal-body');
@@ -57,25 +58,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterPopulasi = document.getElementById('filter-populasi');
     const resetFilterBtn = document.getElementById('reset-filter-btn');
     const viewAllLocationsBtn = document.getElementById('view-all-locations-btn'); 
-    const scrollToContentBtn = document.getElementById('scroll-to-content-btn'); // Dapatkan elemen panah
+    const scrollToContentBtn = document.getElementById('scroll-to-content-btn'); 
     const addAnimalBtn = document.getElementById('add-animal-btn');
     const addAnimalModal = document.getElementById('add-animal-modal');
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
+    const scrollBtnContainer = document.querySelector('.scroll-buttons'); 
     let currentFilteredLocation = ''; 
     let currentEditingAnimal = null;
 
     let currentIndex = 0;
     let currentlyDisplayedAnimals = [];
     let currentHeroIndex = 0;
-    const itemsPerPage = 4; // for main carousel
+    const itemsPerPage = 4; 
     let currentQuizAnimal = null;
     let revealedIndexes = [];
     let usedHintTypes = [];
-
-    // Variabel untuk carousel "Lihat Juga"
     let randomCarouselIndex = 0;
-    const randomItemsPerView = 3; // Jumlah item yang terlihat di "Lihat Juga"
+    const randomItemsPerView = 3; 
 
     function createHeroSlides() {
         heroSlidesData.forEach(slideData => {
@@ -102,7 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const newActiveSlide = slides[index];
         newActiveSlide.classList.add('active');
-        newActiveSlide.play().catch(error => {});
+        
+        newActiveSlide.play().catch(error => {}); 
         heroTitle.textContent = heroSlidesData[index].judul;
         heroSubtitle.textContent = heroSlidesData[index].subjudul;
         currentHeroIndex = index;
@@ -128,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = hewan.gambar || '';
             img.alt = hewan.nama || '';
             img.onerror = () => {
-                imageWrapper.style.display = 'none';
+                
+                imageWrapper.style.display = 'none'; 
             };
             imageWrapper.appendChild(img);
 
@@ -152,7 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCarouselPosition() {
         const track = document.querySelector('.carousel-track');
         if (!track) return;
-        track.style.transform = `translateX(${-currentIndex * 25.5}%)`;
+        
+        track.style.transform = `translateX(${-currentIndex * 25.5}%)`; 
     }
 
     function showNextItem() {
@@ -282,21 +285,15 @@ document.addEventListener('DOMContentLoaded', () => {
         quizHintBtn.classList.add('hidden');
         quizNextBtn.classList.remove('hidden');
     }
-    
+
     function openModal(hewan) {
+        
         const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5);
         const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
 
+        
         modalBody.innerHTML = `
-            <div class="modal-header-controls">
-                 <button id="edit-animal-btn" 
-                    class="absolute top-4 right-40 bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition-colors"
-                    data-id="${uniqueId}">Edit</button>
-                 <button id="delete-animal-btn" 
-                    class="absolute top-4 right-20 bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition-colors"
-                    data-id="${uniqueId}">Hapus</button>
-            </div>
-            <img src="" alt="${hewan.nama || ''}" class="modal-animal-image">
+            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
             <h2>${hewan.nama || 'N/A'}</h2>
             <p class="nama-ilmiah"><i>${hewan.namaIlmiah || 'N/A'}</i></p> 
             <p>${hewan.deskripsi || 'N/A'}</p>
@@ -329,17 +326,40 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        const modalImage = modalBody.querySelector('.modal-animal-image');
-        modalImage.src = hewan.gambar || 'images/placeholder.png';
-
         modal.style.display = 'flex';
+        
+        const menuBtn = document.getElementById('modal-menu-btn');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const editBtn = document.getElementById('dropdown-edit-btn');
+        const deleteBtn = document.getElementById('dropdown-delete-btn');
 
-        document.getElementById('edit-animal-btn').addEventListener('click', () => handleEditClick(hewan));
+        
+        menuBtn.onclick = (e) => {
+            e.stopPropagation(); 
+            dropdownMenu.classList.toggle('hidden');
+        };
 
-        document.getElementById('delete-animal-btn').addEventListener('click', function() {
-            const animalIdToDelete = this.dataset.id;
+        
+        window.addEventListener('click', (e) => {
+            if (dropdownMenu && !dropdownMenu.classList.contains('hidden')) {
+                
+                if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            }
+        });
+
+        
+        editBtn.onclick = () => {
+             dropdownMenu.classList.add('hidden');
+             handleEditClick(hewan);
+        };
+
+        
+        deleteBtn.onclick = function() {
+            dropdownMenu.classList.add('hidden');
             if (confirm(`Apakah Anda yakin ingin menghapus data ${hewan.nama}?`)) {
-                const animalIndex = dataHewan.findIndex(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalIdToDelete);
+                const animalIndex = dataHewan.findIndex(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === uniqueId);
                 if (animalIndex > -1) {
                     dataHewan.splice(animalIndex, 1);
                     modal.style.display = 'none';
@@ -348,9 +368,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         applyFilters();
                     }
                     alert('Data hewan berhasil dihapus.');
+                    loadUniqueLocations();
                 }
             }
-        });
+        };
+
+        
 
         if (randomAnimals.length > randomItemsPerView) {
             initRandomCarousel(randomAnimals);
@@ -368,14 +391,14 @@ document.addEventListener('DOMContentLoaded', () => {
         form.querySelector('[name="nama"]').value = hewan.nama || '';
         form.querySelector('[name="namaIlmiah"]').value = hewan.namaIlmiah || '';
         form.querySelector('[name="deskripsi"]').value = hewan.deskripsi || '';
-        form.querySelector('[name="lokasi"]').value = hewan.lokasi || '';
+        
+        form.querySelector('[name="lokasi"]').value = Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || '';
         form.querySelector('[name="statusKonservasi"]').value = hewan.statusKonservasi || '';
         form.querySelector('[name="populasi"]').value = hewan.populasi || '';
         form.querySelector('[name="tahunPencatatan"]').value = hewan.tahunPencatatan || '';
         form.querySelector('[name="makanan"]').value = hewan.makanan || '';
         form.querySelector('[name="tipeMakanan"]').value = hewan.tipeMakanan || '';
         form.querySelector('[name="hubunganMasyarakat"]').value = hewan.hubunganMasyarakat || '';
-        // Pre-fill the URL field with the existing image URL
         form.querySelector('[name="gambar"]').value = hewan.gambar || '';
 
         addAnimalModal.querySelector('h1').textContent = 'Edit Hewan';
@@ -383,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('modal-open');
     }
 
-    // Fungsi untuk menginisialisasi carousel "Lihat Juga"
+    
     function initRandomCarousel(animals) {
         const randomGrid = modalBody.querySelector('.random-grid');
         const prevRandomBtn = modalBody.querySelector('.random-nav-btn.prev');
@@ -393,11 +416,18 @@ document.addEventListener('DOMContentLoaded', () => {
         prevRandomBtn.classList.remove('hidden');
         nextRandomBtn.classList.remove('hidden');
 
-        randomCarouselIndex = 0; // Reset index saat modal dibuka
+        randomCarouselIndex = 0; 
         updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
 
         prevRandomBtn.onclick = () => {
-            randomCarouselIndex = (randomCarouselIndex - 1 + animals.length) % animals.length;
+            randomCarouselIndex = (randomCarouselIndex - 1 + animals.length);
+            
+            if (randomCarouselIndex >= animals.length) {
+                randomCarouselIndex = animals.length - 1;
+            }
+            if (randomCarouselIndex < 0) {
+                randomCarouselIndex = animals.length - 1;
+            }
             updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
         };
 
@@ -419,26 +449,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fungsi untuk memperbarui tampilan carousel "Lihat Juga"
+    
     function updateRandomCarousel(animals, randomGrid, prevBtn, nextBtn, dotsContainer) {
-        const cardWidth = randomGrid.querySelector('.random-card') ? randomGrid.querySelector('.random-card').offsetWidth : 0;
-        const gap = parseInt(window.getComputedStyle(randomGrid).marginRight); // Ambil nilai gap dari CSS
-
-        // Hitung total lebar satu item (card + gap)
-        const itemFullWidth = cardWidth + (cardWidth * 0.02 / 0.32); // 2% gap / 32% card width ratio
         
-        // Geser grid
-        // Gunakan transform: translateX untuk menggeser track carousel
-        const offset = -randomCarouselIndex * (100 / randomItemsPerView); // Geser sebanyak persentase dari itemFullWidth
+        
+        const itemsToShift = animals.length - randomItemsPerView;
+        const maxIndex = itemsToShift > 0 ? itemsToShift : 0;
+        
+        
+        if (randomCarouselIndex > maxIndex) {
+            randomCarouselIndex = maxIndex;
+        }
+
+        const offset = -randomCarouselIndex * (100 / randomItemsPerView); 
         randomGrid.style.transform = `translateX(${offset}%)`;
 
-        // Update dots
         const dots = dotsContainer.querySelectorAll('.random-dot');
         dots.forEach((dot, idx) => {
-            dot.classList.toggle('active', idx === randomCarouselIndex);
+            
+            dot.classList.toggle('active', idx >= randomCarouselIndex && idx < randomCarouselIndex + randomItemsPerView);
         });
 
-        // Tampilkan/sembunyikan tombol navigasi jika diperlukan (untuk kasus sedikit item)
+        
         if (animals.length <= randomItemsPerView) {
             prevBtn.classList.add('hidden');
             nextBtn.classList.add('hidden');
@@ -448,8 +480,14 @@ document.addEventListener('DOMContentLoaded', () => {
             nextBtn.classList.remove('hidden');
             dotsContainer.classList.remove('hidden');
         }
+        
+        
+        prevBtn.disabled = randomCarouselIndex === 0;
+        nextBtn.disabled = randomCarouselIndex >= maxIndex;
     }
 
+
+    
 
     function toggleMainContent(showLocationList) {
         mainContent.classList.toggle('hidden', showLocationList);
@@ -460,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderLocationAnimals(location, filterName = '', filterMakanan = '', filterLok = '', filterPop = '') {
         currentFilteredLocation = location;
 
-        // Kontrol Visibilitas Filter Lokasi
+        
         if (location === 'Seluruh Nusantara') {
             filterLokasi.style.display = 'block';
         } else {
@@ -473,12 +511,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const animalsToFilter = location === 'Seluruh Nusantara' 
             ? dataHewan 
-            : dataHewan.filter(hewan => hewan.lokasi.includes(location));
+            : dataHewan.filter(hewan => 
+                
+                Array.isArray(hewan.lokasi) 
+                ? hewan.lokasi.includes(location)
+                : hewan.lokasi === location
+            );
 
         const animalsInLocation = animalsToFilter.filter(hewan => 
             hewan.nama.toLowerCase().includes(filterName.toLowerCase())
             && (filterMakanan === '' || hewan.tipeMakanan === filterMakanan)
-            && (filterLok === '' || hewan.lokasi.includes(filterLok)) 
+            
+            && (filterLok === '' || (hewan.lokasi && (Array.isArray(hewan.lokasi) ? hewan.lokasi.includes(filterLok) : hewan.lokasi === filterLok))) 
             && (filterPop === '' 
                 || (filterPop === 'Tidak Diketahui' && !hewan.statusKonservasi)
                 || hewan.statusKonservasi === filterPop)
@@ -537,19 +581,22 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMainContent(true);
     }
     
-    // Function to dynamically load unique locations into the filter
+    
     function loadUniqueLocations() {
         const uniqueLocations = new Set();
         dataHewan.forEach(hewan => {
-            // Logika untuk menangani lokasi sebagai string atau array
-            if (hewan.lokasi && Array.isArray(hewan.lokasi)) {
-                hewan.lokasi.forEach(loc => uniqueLocations.add(loc));
-            } else if (hewan.lokasi) {
-                uniqueLocations.add(hewan.lokasi);
+            if (hewan.lokasi) {
+                
+                if (Array.isArray(hewan.lokasi)) {
+                    hewan.lokasi.forEach(loc => uniqueLocations.add(loc));
+                } else if (typeof hewan.lokasi === 'string') {
+                    
+                    hewan.lokasi.split(',').map(s => s.trim()).filter(s => s).forEach(loc => uniqueLocations.add(loc));
+                }
             }
         });
         
-        filterLokasi.innerHTML = '<option value="">Semua Lokasi</option>'; // Default option
+        filterLokasi.innerHTML = '<option value="">Semua Lokasi</option>'; 
         Array.from(uniqueLocations).sort().forEach(loc => {
             const option = document.createElement('option');
             option.value = loc;
@@ -558,16 +605,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // New function to render all animals (for the new button)
     function renderAllAnimals() {
-        // 1. Load semua opsi lokasi ke filter
         loadUniqueLocations();
-        // 2. Reset semua filter
         filterNameInput.value = '';
         filterTipeMakanan.value = '';
         filterLokasi.value = ''; 
         filterPopulasi.value = '';
-        // 3. Render list
         renderLocationAnimals('Seluruh Nusantara');
     }
 
@@ -588,7 +631,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     addAnimalBtn.addEventListener('click', () => {
-        resetAddAnimalForm(); // Ensures form is clean for adding
+        resetAddAnimalForm(); 
         addAnimalModal.style.display = 'flex';
         document.body.classList.add('modal-open');
     });
@@ -599,7 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('modal-open');
     });
 
-    // Close modal on overlay click
     addAnimalModal.addEventListener('click', (e) => {
         if (e.target === addAnimalModal) {
             addAnimalModal.style.display = 'none';
@@ -612,6 +654,12 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const formData = new FormData(addAnimalForm);
         const imageUrl = formData.get('gambar');
+        const lokasiInput = formData.get('lokasi');
+
+        
+        const normalizedLokasi = lokasiInput.includes(',') ? 
+                                 lokasiInput.split(',').map(s => s.trim()).filter(s => s) : 
+                                 lokasiInput.trim();
 
         let imageToSave = imageUrl;
 
@@ -619,69 +667,59 @@ document.addEventListener('DOMContentLoaded', () => {
             imageToSave = currentEditingAnimal.gambar;
         }
 
+        const newOrUpdatedData = {
+            nama: formData.get('nama'),
+            namaIlmiah: formData.get('namaIlmiah'),
+            lokasi: normalizedLokasi, 
+            statusKonservasi: formData.get('statusKonservasi'),
+            deskripsi: formData.get('deskripsi'),
+            populasi: formData.get('populasi'),
+            tahunPencatatan: formData.get('tahunPencatatan'),
+            kebiasaanUnik: "Data tidak tersedia", 
+            makanan: formData.get('makanan'),
+            tipeMakanan: formData.get('tipeMakanan'),
+            hubunganMasyarakat: formData.get('hubunganMasyarakat'),
+            gambar: imageToSave,
+        };
+
         if (currentEditingAnimal) {
-            // --- EDIT MODE ---
+            
             const index = dataHewan.findIndex(h => h === currentEditingAnimal);
             if (index > -1) {
-                const updatedAnimal = {
-                    ...dataHewan[index],
-                    nama: formData.get('nama'),
-                    namaIlmiah: formData.get('namaIlmiah'),
-                    lokasi: formData.get('lokasi'),
-                    statusKonservasi: formData.get('statusKonservasi'),
-                    deskripsi: formData.get('deskripsi'),
-                    populasi: formData.get('populasi'),
-                    tahunPencatatan: formData.get('tahunPencatatan'),
-                    makanan: formData.get('makanan'),
-                    tipeMakanan: formData.get('tipeMakanan'),
-                    hubunganMasyarakat: formData.get('hubunganMasyarakat'),
-                    gambar: imageToSave,
-                };
-                dataHewan[index] = updatedAnimal;
+                
+                dataHewan[index] = { ...dataHewan[index], ...newOrUpdatedData };
                 alert('Data hewan berhasil diperbarui!');
             }
         } else {
-            // --- ADD MODE ---
-            const newAnimal = {
-                nama: formData.get('nama'),
-                namaIlmiah: formData.get('namaIlmiah'),
-                lokasi: formData.get('lokasi'),
-                statusKonservasi: formData.get('statusKonservasi'),
-                deskripsi: formData.get('deskripsi'),
-                populasi: formData.get('populasi'),
-                tahunPencatatan: formData.get('tahunPencatatan'),
-                kebiasaanUnik: "Data tidak tersedia",
-                makanan: formData.get('makanan'),
-                tipeMakanan: formData.get('tipeMakanan'),
-                hubunganMasyarakat: formData.get('hubunganMasyarakat'),
-                gambar: imageToSave,
-            };
-            dataHewan.unshift(newAnimal);
+            
+            dataHewan.unshift(newOrUpdatedData);
             alert('Hewan baru berhasil ditambahkan!');
         }
 
-        // Common cleanup and refresh
+        
         addAnimalModal.style.display = 'none';
-        resetAddAnimalForm(); // This already resets currentEditingAnimal to null
+        resetAddAnimalForm(); 
         document.body.classList.remove('modal-open');
         loadAllAnimals();
-        loadUniqueLocations();
+        loadUniqueLocations(); 
         if (!locationListPage.classList.contains('hidden')) {
             applyFilters();
         }
     });
 
 
+    
     createHeroSlides();
     showHeroSlide(0);
     setInterval(nextHeroSlide, 7000); 
     loadAllAnimals();
     setInterval(showNextItem, 4000);
     generateQuestion();
+    loadUniqueLocations(); 
 
-    // Event listener untuk panah ke bawah (scroll-down-indicator)
+    
     scrollToContentBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Mencegah perilaku default dari tag <a>
+        e.preventDefault(); 
         scrollToAboutSection();
     });
     
@@ -694,6 +732,7 @@ document.addEventListener('DOMContentLoaded', () => {
     quizHintBtn.addEventListener('click', showNextHint);
     quizNextBtn.addEventListener('click', generateQuestion);
     
+    
     animalContainer.addEventListener('click', e => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
@@ -702,11 +741,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hewan) openModal(hewan);
     });
     
+    
     document.querySelectorAll('.map-waypoint').forEach(waypoint => {
         waypoint.addEventListener('click', (e) => {
             e.preventDefault();
             const location = waypoint.dataset.location;
-            // Reset filter saat klik lokasi spesifik
+            
             filterLokasi.value = ''; 
             filterNameInput.value = '';
             filterTipeMakanan.value = '';
@@ -718,16 +758,15 @@ document.addEventListener('DOMContentLoaded', () => {
     viewAllLocationsBtn.addEventListener('click', renderAllAnimals);
 
     backToHomeBtn.addEventListener('click', () => {
-        // 1. Reset semua filter
+        
         filterNameInput.value = '';
         filterTipeMakanan.value = '';
         filterLokasi.value = '';
         filterPopulasi.value = '';
 
-        // 2. Switch back to main content (This calls window.scrollTo({ top: 0 }))
         toggleMainContent(false); 
 
-        // 3. Gulir ke bagian "Jelajahi Habitat" (dengan sedikit delay agar DOM sempat di-render)
+        
         setTimeout(() => {
             const mapWrapper = document.getElementById('map-section-wrapper');
             if (mapWrapper) {
@@ -736,6 +775,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 100); 
     });
+    
     
     filterNameInput.addEventListener('keyup', applyFilters);
     filterTipeMakanan.addEventListener('change', applyFilters);
@@ -749,6 +789,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters();
     });
     
+    
     locationAnimalList.addEventListener('click', e => {
         const card = e.target.closest('.location-card');
         if (!card) return;
@@ -757,6 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hewan) openModal(hewan);
     });
 
+    
     modalBody.addEventListener('click', e => {
         const randomCard = e.target.closest('.random-card');
         if (randomCard) {
@@ -768,31 +810,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
+    
     quizAnswerInput.addEventListener('keyup', e => { if (e.key === 'Enter') checkAnswer(); });
+    
+    
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', e => { 
         if (e.target === modal) {
             modal.style.display = 'none'; 
         }
     });
+    
+    
     scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     scrollBottomBtn.addEventListener("click", () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const scrollBtnContainer = document.querySelector('.scroll-buttons');
+    
     let lastScrollTop = 0;
+    const scrollThreshold = 100; 
 
     window.addEventListener('scroll', function() {
         let st = window.pageYOffset || document.documentElement.scrollTop;
-        if (st > lastScrollTop) {
-            // Scroll ke bawah
-            scrollBtnContainer.style.bottom = '20px'; // Tampilkan
+        
+        
+        if (st > lastScrollTop && st > scrollThreshold) {
+            
+            scrollBtnContainer.style.bottom = '20px'; 
         } else {
-            // Scroll ke atas
-            scrollBtnContainer.style.bottom = '-100px'; // Sembunyikan
+            
+            scrollBtnContainer.style.bottom = '-100px'; 
         }
-        lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-    }, false);
+        
+        lastScrollTop = st <= 0 ? 0 : st;
+    });
 });
