@@ -535,11 +535,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addAnimalBtn.addEventListener('click', () => {
         addAnimalModal.style.display = 'flex';
+        document.body.classList.add('modal-open');
     });
 
     closeAddAnimalModalBtn.addEventListener('click', () => {
         addAnimalModal.style.display = 'none';
         resetAddAnimalForm();
+        document.body.classList.remove('modal-open');
+    });
+
+    // Close modal on overlay click
+    addAnimalModal.addEventListener('click', (e) => {
+        if (e.target === addAnimalModal) {
+            addAnimalModal.style.display = 'none';
+            resetAddAnimalForm();
+            document.body.classList.remove('modal-open');
+        }
     });
 
     addAnimalForm.addEventListener('submit', (e) => {

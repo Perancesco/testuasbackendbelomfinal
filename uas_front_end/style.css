@@ -60,9 +60,12 @@ body {
 .slider-wrapper { 
     position: relative; 
     max-width: 1120px; /* Accommodates container + buttons */
-    margin: 0 auto;
-    padding: 2rem 0; 
+    margin: 4rem auto;
+    padding: 3rem 2rem;
     text-align: center; 
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 .container { max-width: 1000px; margin: 0 auto; overflow: visible; text-align: left; }
 #animal-container.container { 
@@ -334,7 +337,14 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 .scroll-down-indicator { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: white; font-size: 3rem; text-decoration: none; animation: bounce 2s infinite; }
 @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-20px); } 60% { transform: translateX(-50%) translateY(-10px); } }
 
-.location-list-page { width: 100%; padding: 2rem 0 4rem 0; min-height: 100vh; background-color: var(--bg-color-darker); }
+.location-list-page {
+    width: 100%;
+    padding: 2rem 0 4rem 0;
+    max-height: 80vh; /* Set max height to 80% of viewport */
+    overflow-y: auto; /* Enable vertical scrolling for the whole section */
+    background-color: transparent; /* Make background transparent */
+    box-sizing: border-box; /* Ensure padding is included in height calculation */
+}
 .back-btn { margin-bottom: 2rem; padding: 0.7rem 1.5rem; font-size: 1rem; }
 .location-animal-list-grid { display: grid; grid-template-columns: repeat(auto-fill, 300px); justify-content: center; gap: 2rem; padding-top: 1rem; }
 .location-card { background-color: var(--card-color); border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
@@ -634,4 +644,13 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
 
 #add-animal-btn {
     margin-left: 2rem;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+#add-animal-modal > .w-full {
+    max-height: 65vh;
+    overflow-y: auto;
 }
