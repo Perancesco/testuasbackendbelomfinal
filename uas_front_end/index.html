@@ -5,11 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ensiklopedia Hewan Langka Indonesia</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            'light': '#9333ea', // purple-600
+                            'dark': '#a855f7' // purple-500
+                        },
+                        "background-light": "#f3e8ff", // purple-50
+                        "background-dark": "#1e1b4b", // indigo-950
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#312e81", // indigo-900
+                        "text-light": "#1e293b", // slate-800
+                        "text-dark": "#e2e8f0", // slate-200
+                        "subtext-light": "#64748b", // slate-500
+                        "subtext-dark": "#94a3b8", // slate-400
+                        "border-light": "#e2e8f0", // slate-200
+                        "border-dark": "#475569", // slate-600
+                        "icon-light": "#94a3b8", // slate-400
+                        "icon-dark": "#64748b", // slate-500
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '0.75rem', // 12px
+                        'lg': '1rem', // 16px
+                        'xl': '1.5rem' // 24px
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            background-color: #f3e8ff;
+        }
+        .dark body {
+            background-color: #1e1b4b;
+        }
+    </style>
 </head>
 <body>
 
@@ -157,24 +198,82 @@
         </div>
     </div>
 
-    <div id="add-animal-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <button class="close-btn">&times;</button>
-            <h2>Tambah Hewan Baru</h2>
-            <form id="add-animal-form">
-                <input type="text" name="nama" placeholder="Nama Hewan" required>
-                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
-                <input type="text" name="lokasi" placeholder="Lokasi" required>
-                <input type="text" name="statusKonservasi" placeholder="Status Konservasi" required>
-                <textarea name="deskripsi" placeholder="Deskripsi" required></textarea>
-                <input type="text" name="gambar" placeholder="URL Gambar" required>
-                <input type="text" name="populasi" placeholder="Populasi">
-                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
-                <textarea name="kebiasaanUnik" placeholder="Kebiasaan Unik"></textarea>
-                <input type="text" name="makanan" placeholder="Makanan">
-                <input type="text" name="tipeMakanan" placeholder="Tipe Makanan">
-                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan Masyarakat"></textarea>
-                <button type="submit" class="cta-button">Simpan</button>
+    <div id="add-animal-modal" class="modal-overlay bg-background-light dark:bg-background-dark flex items-center justify-center min-h-screen" style="display: none;">
+        <div class="w-full max-w-md mx-auto bg-surface-light dark:bg-surface-dark rounded-xl shadow-lg p-8 m-4">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Tambah Hewan Baru</h1>
+                    <p class="text-sm text-subtext-light dark:text-subtext-dark mt-1">Lengkapi formulir untuk data baru.</p>
+                </div>
+                <button class="close-btn text-icon-light dark:text-icon-dark hover:text-text-light dark:hover:text-text-dark">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="relative w-32 h-32 mx-auto mb-6">
+                <div class="w-full h-full rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center border-2 border-dashed border-purple-300 dark:border-purple-700">
+                    <div class="text-center">
+                        <span class="material-icons text-4xl text-purple-400 dark:text-purple-500">pets</span>
+                        <p class="text-xs text-purple-600 dark:text-purple-400 mt-1">Upload Foto</p>
+                    </div>
+                </div>
+                <button class="absolute bottom-0 right-0 bg-white dark:bg-slate-700 rounded-full p-2 shadow-md">
+                    <span class="material-icons text-purple-500">photo_camera</span>
+                </button>
+            </div>
+            <form id="add-animal-form" class="space-y-4">
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">pets</span>
+                    <input name="nama" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Nama Hewan" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">science</span>
+                    <input name="namaIlmiah" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Nama Ilmiah" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-5 text-icon-light dark:text-icon-dark">description</span>
+                    <textarea name="deskripsi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Deskripsi" rows="3"></textarea>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">location_on</span>
+                    <input name="lokasi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Lokasi" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">shield</span>
+                    <input name="statusKonservasi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Status Konservasi" type="text"/>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-900/50 p-4 rounded-lg flex items-start space-x-3">
+                    <div class="bg-blue-100 dark:bg-blue-900/50 rounded-full p-2">
+                        <span class="material-icons text-blue-500">add_circle_outline</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-blue-800 dark:text-blue-200">Informasi Tambahan</h3>
+                        <p class="text-sm text-blue-600 dark:text-blue-400">Isi data tambahan di bawah ini untuk kelengkapan informasi.</p>
+                    </div>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">groups</span>
+                    <input name="populasi" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Populasi" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">calendar_today</span>
+                    <input name="tahunPencatatan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Tahun Pencatatan" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">restaurant_menu</span>
+                    <input name="makanan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Makanan" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">local_dining</span>
+                    <input name="tipeMakanan" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Tipe Makanan" type="text"/>
+                </div>
+                <div class="relative">
+                    <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-icon-light dark:text-icon-dark">image</span>
+                    <input name="gambar" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="URL Gambar" type="text"/>
+                </div>
+                <button type="submit" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
+                    <span class="material-icons">save</span>
+                    <span>Simpan Perubahan</span>
+                </button>
             </form>
         </div>
     </div>
