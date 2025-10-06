@@ -8,7 +8,50 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            'light': '#9333ea', // purple-600
+                            'dark': '#a855f7' // purple-500
+                        },
+                        "background-light": "#f3e8ff", // purple-50
+                        "background-dark": "#1e1b4b", // indigo-950
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#312e81", // indigo-900
+                        "text-light": "#1e293b", // slate-800
+                        "text-dark": "#e2e8f0", // slate-200
+                        "subtext-light": "#64748b", // slate-500
+                        "subtext-dark": "#94a3b8", // slate-400
+                        "border-light": "#e2e8f0", // slate-200
+                        "border-dark": "#475569", // slate-600
+                        "icon-light": "#94a3b8", // slate-400
+                        "icon-dark": "#64748b", // slate-500
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '0.75rem', // 12px
+                        'lg': '1rem', // 16px
+                        'xl': '1.5rem' // 24px
+                    },
+                },
+            },
+        };
+    </script>};
+    </script>
+    <style>
+        body {
+            background-color: #f3e8ff;
+        }
+        .dark body {
+            background-color: #1e1b4b;
+        }
+    </style>
 </head>
 <body>
 
@@ -240,16 +283,7 @@
                     <textarea name="hubunganMasyarakat" class="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-lg text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-purple-500 focus:border-purple-500" placeholder="Kearifan Lokal" rows="3"></textarea>
                 </div>
                 <button type="submit" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 px-4 rounded-lg shadow-md hover:from-purple-600 hover:to-pink-600 transition-all duration-300">
-                    <span class="material-icons">save</span>
-                    <span>Simpan Perubahan</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div class="scroll-buttons">
-        <button id="scrollTopBtn" class="scroll-btn">⭡</button>
-        <button id="scrollBottomBtn" class="scroll-btn">⭣</button>
+ass="scroll-btn">⭣</button>
     </div>
 
     <script src="data.js"></script>
