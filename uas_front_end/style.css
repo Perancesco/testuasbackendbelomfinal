@@ -618,3 +618,42 @@ footer { text-align: center; padding: 2rem; background-color: var(--card-color);
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
     transform: translateY(-0.25rem);
 }
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+#add-animal-btn {
+    margin-left: 2rem;
+}
+
+#add-animal-modal .modal-content {
+    max-width: 500px;
+}
+
+#add-animal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#add-animal-form input,
+#add-animal-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#add-animal-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+#add-animal-form button {
+    margin-top: 1rem;
+}

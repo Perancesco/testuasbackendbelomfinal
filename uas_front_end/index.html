@@ -71,7 +71,10 @@
 </div>
 
         <div class="slider-wrapper" id="animal-container-wrapper">
-            <h2 class="section-title">Ensiklopedia</h2>
+            <div class="title-container">
+                <h2 class="section-title">Ensiklopedia</h2>
+                <button id="add-animal-btn" class="cta-button">Tambah Hewan</button>
+            </div>
             <main id="animal-container" class="container">
             </main>
             <button id="prev-btn" class="slider-nav-btn prev">⮜</button>
@@ -151,6 +154,28 @@
         <div class="modal-content">
             <button class="close-btn">&times;</button>
             <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="add-animal-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <h2>Tambah Hewan Baru</h2>
+            <form id="add-animal-form">
+                <input type="text" name="nama" placeholder="Nama Hewan" required>
+                <input type="text" name="namaIlmiah" placeholder="Nama Ilmiah" required>
+                <input type="text" name="lokasi" placeholder="Lokasi" required>
+                <input type="text" name="statusKonservasi" placeholder="Status Konservasi" required>
+                <textarea name="deskripsi" placeholder="Deskripsi" required></textarea>
+                <input type="text" name="gambar" placeholder="URL Gambar" required>
+                <input type="text" name="populasi" placeholder="Populasi">
+                <input type="number" name="tahunPencatatan" placeholder="Tahun Pencatatan">
+                <textarea name="kebiasaanUnik" placeholder="Kebiasaan Unik"></textarea>
+                <input type="text" name="makanan" placeholder="Makanan">
+                <input type="text" name="tipeMakanan" placeholder="Tipe Makanan">
+                <textarea name="hubunganMasyarakat" placeholder="Hubungan dengan Masyarakat"></textarea>
+                <button type="submit" class="cta-button">Simpan</button>
+            </form>
         </div>
     </div>
 
