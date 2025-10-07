@@ -4,7 +4,6 @@ html {
 
 .hidden { display: none !important; }
 
-/* --- FAVORIT REALTIME & POSISI --- */
 .favorite-btn {
     background: transparent;
     border: none;
@@ -574,7 +573,7 @@ footer { text-align: center; padding: 2rem; background-image: url('wave.png'); b
 
 #about-section button {
     margin-top: 2rem;
-    color: #fff;
+    color: #000000;
     font-weight: 600;
     padding: 0.75rem 2rem;
     border-radius: 9999px;
