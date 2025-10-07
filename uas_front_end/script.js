@@ -4,6 +4,60 @@ const heroSlidesData = [
     { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
 ];
 
+// Fungsi Utility Favorit
+function getAnimalUniqueId(hewan) {
+    // Menggunakan namaIlmiah sebagai ID yang lebih stabil jika ada
+    return hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
+}
+
+function getFavorites() {
+    const favorites = localStorage.getItem('animalFavorites');
+    return favorites ? JSON.parse(favorites) : {};
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem('animalFavorites', JSON.stringify(favorites));
+    updateFavoriteCount(); // Panggil fungsi update setiap kali favorit diubah
+}
+
+function isFavorite(animalId) {
+    const favorites = getFavorites();
+    return !!favorites[animalId];
+}
+
+function toggleFavorite(animalId) {
+    const favorites = getFavorites();
+    const isCurrentlyFavorite = isFavorite(animalId);
+    
+    if (isCurrentlyFavorite) {
+        delete favorites[animalId];
+        // Hapus notifikasi pop-up
+    } else {
+        favorites[animalId] = true;
+        // Hapus notifikasi pop-up
+    }
+    
+    saveFavorites(favorites);
+    
+    // TIDAK PERLU REFRESH SELURUH HALAMAN LAGI DI SINI
+    
+    return !isCurrentlyFavorite; // Mengembalikan status baru
+}
+
+function updateFavoriteCount() {
+    const count = Object.keys(getFavorites()).length;
+    const btn = document.getElementById('view-favorites-btn');
+    if (btn) {
+        btn.textContent = `Lihat Favorit Anda (${count})`;
+        
+        // Tambahkan event listener untuk tombol favorit di halaman utama
+        btn.onclick = () => {
+            currentFilteredLocation = 'Favorit';
+            renderLocationAnimals('Favorit');
+        };
+    }
+}
+
 function scrollToCarousel() {
     const carouselWrapper = document.getElementById('animal-container-wrapper');
     const offsetPosition = carouselWrapper.getBoundingClientRect().top + window.pageYOffset;
@@ -16,6 +70,32 @@ function scrollToAboutSection() {
         const offsetPosition = aboutSection.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
+}
+
+// Fungsi Bantuan untuk Label Status Konservasi
+function createStatusBadge(status) {
+    let className = 'status-badge';
+    let text = status || 'N/A';
+    
+    switch (status) {
+        case 'Kritis':
+            className += ' critical';
+            break;
+        case 'Terancam':
+            className += ' endangered';
+            break;
+        case 'Rentan':
+            className += ' vulnerable';
+            break;
+        case 'Hampir Terancam':
+            className += ' near-threatened';
+            break;
+        default:
+            className += ' unknown';
+            break;
+    }
+    
+    return `<span class="${className}">${text}</span>`;
 }
 
 
@@ -56,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterTipeMakanan = document.getElementById('filter-tipe-makanan');
     const filterLokasi = document.getElementById('filter-lokasi'); 
     const filterPopulasi = document.getElementById('filter-populasi');
+    const filterFavorite = document.getElementById('filter-favorite'); 
     const resetFilterBtn = document.getElementById('reset-filter-btn');
     const viewAllLocationsBtn = document.getElementById('view-all-locations-btn'); 
     const scrollToContentBtn = document.getElementById('scroll-to-content-btn'); 
@@ -64,6 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
     const scrollBtnContainer = document.querySelector('.scroll-buttons'); 
+    const modalFavoriteBtn = document.getElementById('modal-favorite-btn');
+    
     let currentFilteredLocation = ''; 
     let currentEditingAnimal = null;
 
@@ -112,15 +195,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function nextHeroSlide() { showHeroSlide((currentHeroIndex + 1) % heroSlidesData.length); }
     function prevHeroSlide() { showHeroSlide((currentHeroIndex - 1 + heroSlidesData.length) % heroSlidesData.length); }
 
+    // KAROSEL: Bintang disebelah nama + Status & Lokasi jadi badge
     function displayCarouselItems(animalArray) {
         animalContainer.innerHTML = '';
         if (animalArray.length === 0) { animalContainer.innerHTML = '<p class="not-found">Data tidak ditemukan.</p>'; return; }
         const track = document.createElement('div');
         track.className = 'carousel-track';
         animalArray.forEach(hewan => {
+            const uniqueId = getAnimalUniqueId(hewan);
+            let isFav = isFavorite(uniqueId);
+            
             const card = document.createElement('div');
             card.className = 'carousel-item';
-            const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
 
             const imageWrapper = document.createElement('div');
@@ -129,20 +215,63 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = hewan.gambar || '';
             img.alt = hewan.nama || '';
             img.onerror = () => {
-                
                 imageWrapper.style.display = 'none'; 
             };
             imageWrapper.appendChild(img);
 
+            // Tombol Favorit (Real-time update)
+            const favBtn = document.createElement('button');
+            favBtn.className = `favorite-btn carousel-card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`;
+            favBtn.dataset.id = uniqueId;
+            favBtn.innerHTML = `
+                <span class="material-icons star-icon">${isFav ? 'star' : 'star_border'}</span>
+                <span class="favorite-tooltip">${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+            `;
+            
+            favBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                const newStatus = toggleFavorite(uniqueId);
+                isFav = newStatus; 
+                favBtn.classList.toggle('is-favorite', newStatus);
+                favBtn.querySelector('.star-icon').textContent = newStatus ? 'star' : 'star_border';
+                favBtn.querySelector('.favorite-tooltip').textContent = newStatus ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+                updateFavoriteCount();
+            };
+
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
+            
+            // Kontainer untuk Nama dan Bintang
+            const titleContainer = document.createElement('div');
+            titleContainer.style.display = 'flex';
+            titleContainer.style.alignItems = 'center';
+            titleContainer.style.gap = '5px'; 
+            titleContainer.style.marginBottom = '0.5rem';
+            
             const h3 = document.createElement('h3');
             h3.textContent = hewan.nama || '';
-            const p = document.createElement('p');
-            p.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
-            cardContent.appendChild(h3);
-            cardContent.appendChild(p);
+            h3.style.margin = '0';
+            
+            titleContainer.appendChild(h3);
+            titleContainer.appendChild(favBtn); 
 
+
+            const pDeskripsi = document.createElement('p');
+            pDeskripsi.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
+            
+            // CONTAINER BADGE STATUS DAN LOKASI
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'badge-row';
+            badgeContainer.innerHTML = `
+                ${createStatusBadge(hewan.statusKonservasi)}
+                <span class="status-badge location">${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</span>
+            `;
+
+
+            cardContent.appendChild(titleContainer); 
+            cardContent.appendChild(pDeskripsi);
+            cardContent.appendChild(badgeContainer);
+            
             card.appendChild(imageWrapper);
             card.appendChild(cardContent);
             track.appendChild(card);
@@ -176,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentlyDisplayedAnimals = [...dataHewan];
         currentIndex = 0; 
         displayCarouselItems(currentlyDisplayedAnimals);
+        updateFavoriteCount(); 
     }
 
     function renderAnswerPlaceholders() {
@@ -286,10 +416,35 @@ document.addEventListener('DOMContentLoaded', () => {
         quizNextBtn.classList.remove('hidden');
     }
 
+    // Logika Tombol Favorit di Modal
+    function updateModalFavoriteButton(hewanId) {
+        const isFav = isFavorite(hewanId);
+        modalFavoriteBtn.dataset.id = hewanId;
+        modalFavoriteBtn.classList.toggle('is-favorite', isFav);
+        modalFavoriteBtn.querySelector('.star-icon').textContent = isFav ? 'star' : 'star_border';
+        modalFavoriteBtn.querySelector('.favorite-tooltip').textContent = isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+    }
+
+    modalFavoriteBtn.onclick = () => {
+        const animalId = modalFavoriteBtn.dataset.id;
+        toggleFavorite(animalId);
+        updateModalFavoriteButton(animalId);
+        
+        // Memperbarui tampilan di background (karosel atau list) jika perlu
+        if (!locationListPage.classList.contains('hidden') && (filterFavorite.value === 'favorite' || currentFilteredLocation === 'Favorit')) {
+            applyFilters(); 
+        } else {
+            loadAllAnimals(); 
+        }
+    };
+
     function openModal(hewan) {
         
-        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 5);
-        const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
+        const uniqueId = getAnimalUniqueId(hewan);
+        const randomAnimals = dataHewan.filter(h => getAnimalUniqueId(h) !== uniqueId).sort(() => 0.5 - Math.random()).slice(0, 5);
+        
+        // Update tombol favorit di modal
+        updateModalFavoriteButton(uniqueId);
 
         
         modalBody.innerHTML = `
@@ -299,7 +454,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>${hewan.deskripsi || 'N/A'}</p>
             <div class="detail-grid-v2">
                 <div class="detail-group-left">
-                    <div class="detail-item-v2"><h4>Status</h4><p>${hewan.statusKonservasi || 'N/A'}</p></div>
+                    <div class="detail-item-v2"><h4>Status</h4><p>${(hewan.statusKonservasi)}</p></div> 
+                    <div class="detail-item-v2"><h4>Lokasi</h4><p>${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</p></div>
                     <div class="detail-item-v2"><h4>Populasi</h4><p>${hewan.populasi || 'N/A'} (${hewan.tahunPencatatan || 'N/A'})</p></div>
                     <div class="detail-item-v2"><h4>Tipe Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
                     <div class="detail-item-v2"><h4>Makanan Utama</h4><p>${hewan.makanan || 'N/A'}</p></div>
@@ -315,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="random-carousel-container">
                     <div class="random-grid">
                         ${randomAnimals.map(rand => `
-                            <div class="random-card" data-id="${rand.namaIlmiah}">
+                            <div class="random-card" data-id="${getAnimalUniqueId(rand)}">
                                 <img src="${rand.gambar}" alt="${rand.nama}">
                                 <p>${rand.nama}</p>
                             </div>
@@ -345,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('click', (e) => {
             if (dropdownMenu && !dropdownMenu.classList.contains('hidden')) {
                 
-                if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target) && !modalFavoriteBtn.contains(e.target)) {
                     dropdownMenu.classList.add('hidden');
                 }
             }
@@ -361,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteBtn.onclick = function() {
             dropdownMenu.classList.add('hidden');
             if (confirm(`Apakah Anda yakin ingin menghapus data ${hewan.nama}?`)) {
-                const animalIndex = dataHewan.findIndex(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === uniqueId);
+                const animalIndex = dataHewan.findIndex(h => getAnimalUniqueId(h) === uniqueId);
                 if (animalIndex > -1) {
                     dataHewan.splice(animalIndex, 1);
                     modal.style.display = 'none';
@@ -394,7 +550,9 @@ document.addEventListener('DOMContentLoaded', () => {
         form.querySelector('[name="namaIlmiah"]').value = hewan.namaIlmiah || '';
         form.querySelector('[name="deskripsi"]').value = hewan.deskripsi || '';
         
+        // Pastikan lokasi ditampilkan dengan benar
         form.querySelector('[name="lokasi"]').value = Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || '';
+        
         form.querySelector('[name="statusKonservasi"]').value = hewan.statusKonservasi || '';
         form.querySelector('[name="populasi"]').value = hewan.populasi || '';
         form.querySelector('[name="tahunPencatatan"]').value = hewan.tahunPencatatan || '';
@@ -497,38 +655,56 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
     
-    function renderLocationAnimals(location, filterName = '', filterMakanan = '', filterLok = '', filterPop = '') {
+    // LIST LOKASI: Bintang disebelah nama + Status & Lokasi jadi badge
+    function renderLocationAnimals(location, filterName = '', filterMakanan = '', filterLok = '', filterPop = '', filterFav = '') {
         currentFilteredLocation = location;
 
-        
-        if (location === 'Seluruh Nusantara') {
+        if (location === 'Seluruh Nusantara' || location === 'Favorit') {
             filterLokasi.style.display = 'block';
         } else {
             filterLokasi.style.display = 'none';
         }
-
+        
         locationListTitle.textContent = location === 'Seluruh Nusantara' 
             ? 'Seluruh Hewan Langka di Nusantara' 
-            : `Hewan Langka di ${location}`;
+            : (location === 'Favorit' 
+                ? 'Hewan Favorit Anda' 
+                : `Hewan Langka di ${location}`);
         
-        const animalsToFilter = location === 'Seluruh Nusantara' 
-            ? dataHewan 
-            : dataHewan.filter(hewan => 
-                
+        let animalsToFilter = dataHewan;
+
+        // 1. Filter Lokasi Awal (hanya jika bukan "Seluruh Nusantara" atau "Favorit")
+        if (location !== 'Seluruh Nusantara' && location !== 'Favorit') {
+            animalsToFilter = dataHewan.filter(hewan => 
                 Array.isArray(hewan.lokasi) 
                 ? hewan.lokasi.includes(location)
                 : hewan.lokasi === location
             );
+        }
 
-        const animalsInLocation = animalsToFilter.filter(hewan => 
-            hewan.nama.toLowerCase().includes(filterName.toLowerCase())
-            && (filterMakanan === '' || hewan.tipeMakanan === filterMakanan)
+        // 2. Terapkan Semua Filter
+        const animalsInLocation = animalsToFilter.filter(hewan => {
+            const uniqueId = getAnimalUniqueId(hewan);
+            const isFav = isFavorite(uniqueId);
             
-            && (filterLok === '' || (hewan.lokasi && (Array.isArray(hewan.lokasi) ? hewan.lokasi.includes(filterLok) : hewan.lokasi === filterLok))) 
-            && (filterPop === '' 
+            const matchLocation = (filterLok === '' || 
+                (hewan.lokasi && 
+                    (Array.isArray(hewan.lokasi) ? hewan.lokasi.includes(filterLok) : hewan.lokasi === filterLok)));
+            
+            const matchName = hewan.nama.toLowerCase().includes(filterName.toLowerCase());
+            
+            const matchMakanan = (filterMakanan === '' || hewan.tipeMakanan === filterMakanan);
+            
+            const matchPopulasi = (filterPop === '' 
                 || (filterPop === 'Tidak Diketahui' && !hewan.statusKonservasi)
-                || hewan.statusKonservasi === filterPop)
-        );
+                || hewan.statusKonservasi === filterPop);
+            
+            const matchFavorite = (filterFav !== 'favorite' || isFav);
+
+            const matchCurrentLocationView = (currentFilteredLocation !== 'Favorit' || isFav);
+            
+            return matchName && matchMakanan && matchLocation && matchPopulasi && matchFavorite && matchCurrentLocationView;
+        });
 
         locationAnimalList.innerHTML = '';
         if (animalsInLocation.length === 0) {
@@ -537,9 +713,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         animalsInLocation.forEach(hewan => {
+            const uniqueId = getAnimalUniqueId(hewan);
+            let isFav = isFavorite(uniqueId);
+            
             const card = document.createElement('div');
             card.className = 'location-card';
-            const uniqueId = hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
             card.dataset.id = uniqueId;
             
             const imageWrapper = document.createElement('div');
@@ -551,30 +729,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageWrapper.style.display = 'none';
             };
             imageWrapper.appendChild(img);
+            
+            // Tombol Favorit (Real-time update)
+            const favBtn = document.createElement('button');
+            favBtn.className = `favorite-btn card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`; 
+            favBtn.dataset.id = uniqueId;
+            favBtn.innerHTML = `
+                <span class="material-icons star-icon">${isFav ? 'star' : 'star_border'}</span>
+                <span class="favorite-tooltip">${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+            `;
+            
+            // Logika Real-time
+            favBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                const newStatus = toggleFavorite(uniqueId);
+                isFav = newStatus; 
+                favBtn.classList.toggle('is-favorite', newStatus);
+                favBtn.querySelector('.star-icon').textContent = newStatus ? 'star' : 'star_border';
+                favBtn.querySelector('.favorite-tooltip').textContent = newStatus ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+                
+                // Jika filter favorit aktif, refresh tampilan
+                if (filterFav === 'favorite' || currentFilteredLocation === 'Favorit') {
+                    applyFilters(); 
+                } else {
+                    updateFavoriteCount();
+                }
+            };
+
 
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
             
+            // Kontainer untuk Nama dan Bintang
+            const titleContainer = document.createElement('div');
+            titleContainer.style.display = 'flex';
+            titleContainer.style.alignItems = 'center';
+            titleContainer.style.gap = '5px'; 
+            titleContainer.style.marginBottom = '0.5rem';
+            
             const h3 = document.createElement('h3');
             h3.textContent = hewan.nama || '';
+            h3.style.margin = '0';
+            
+            titleContainer.appendChild(h3);
+            titleContainer.appendChild(favBtn); 
 
             const p1 = document.createElement('p');
             p1.className = 'short-desc';
             p1.textContent = `${(hewan.deskripsi || '').substring(0, 100)}...`;
 
-            const p2 = document.createElement('p');
-            p2.className = 'short-desc';
-            p2.innerHTML = `<strong>Status:</strong> ${hewan.statusKonservasi || 'N/A'}`;
+            // CONTAINER BADGE STATUS DAN LOKASI
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'badge-row';
+            badgeContainer.innerHTML = `
+                ${createStatusBadge(hewan.statusKonservasi)}
+                <span class="status-badge location">${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</span>
+            `;
 
-            const p3 = document.createElement('p');
-            p3.className = 'short-desc';
-            p3.innerHTML = `<strong>Makanan:</strong> ${hewan.tipeMakanan || 'N/A'}`;
-
-            cardContent.appendChild(h3);
+            cardContent.appendChild(titleContainer);
             cardContent.appendChild(p1);
-            cardContent.appendChild(p2);
-            cardContent.appendChild(p3);
-
+            cardContent.appendChild(badgeContainer);
+            
             card.appendChild(imageWrapper);
             card.appendChild(cardContent);
             locationAnimalList.appendChild(card);
@@ -613,6 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterTipeMakanan.value = '';
         filterLokasi.value = ''; 
         filterPopulasi.value = '';
+        filterFavorite.value = ''; 
         renderLocationAnimals('Seluruh Nusantara');
     }
 
@@ -621,7 +837,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const tipeMakanan = filterTipeMakanan.value;
         const lokasi = filterLokasi.value; 
         const populasi = filterPopulasi.value;
-        renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi);
+        const favorite = filterFavorite.value; 
+        renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi, favorite);
     }
 
     
@@ -718,6 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(showNextItem, 4000);
     generateQuestion();
     loadUniqueLocations(); 
+    updateFavoriteCount(); 
 
     
     scrollToContentBtn.addEventListener('click', (e) => {
@@ -739,7 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => getAnimalUniqueId(h) === animalId);
         if (hewan) openModal(hewan);
     });
     
@@ -753,6 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
             filterNameInput.value = '';
             filterTipeMakanan.value = '';
             filterPopulasi.value = '';
+            filterFavorite.value = ''; 
             renderLocationAnimals(location);
         });
     });
@@ -765,6 +984,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterTipeMakanan.value = '';
         filterLokasi.value = '';
         filterPopulasi.value = '';
+        filterFavorite.value = '';
 
         toggleMainContent(false); 
 
@@ -783,11 +1003,14 @@ document.addEventListener('DOMContentLoaded', () => {
     filterTipeMakanan.addEventListener('change', applyFilters);
     filterLokasi.addEventListener('change', applyFilters); 
     filterPopulasi.addEventListener('change', applyFilters);
+    filterFavorite.addEventListener('change', applyFilters); 
+    
     resetFilterBtn.addEventListener('click', () => {
         filterNameInput.value = '';
         filterTipeMakanan.value = '';
         filterLokasi.value = '';
         filterPopulasi.value = '';
+        filterFavorite.value = '';
         applyFilters();
     });
     
@@ -796,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = e.target.closest('.location-card');
         if (!card) return;
         const animalId = card.dataset.id;
-        const hewan = dataHewan.find(h => (h.namaIlmiah || `${h.nama}-${dataHewan.indexOf(h)}`) === animalId);
+        const hewan = dataHewan.find(h => getAnimalUniqueId(h) === animalId);
         if (hewan) openModal(hewan);
     });
 
