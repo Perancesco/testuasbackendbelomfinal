@@ -53,12 +53,21 @@
 
     <div id="main-content">
         <div class="hero-section" id="hero-section">
+            <nav class="hero-nav">
+                <a href="#hero-section">Home</a>
+                <a href="#about-section">Content</a>
+                <a href="#map-section-wrapper">Map</a>
+                <a href="#games-section">Games</a>
+                <a href="#socials-section">Medsos</a>
+            </nav>
             <div class="hero-slider-container" id="hero-slider-container"></div>
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h2 id="hero-title" class="hero-title"></h2>
                 <p id="hero-subtitle" class="hero-subtitle"></p>
                 <button class="cta-button" onclick="scrollToCarousel()">Mulai Jelajah</button>
+                <button id="play-voiceover-btn" class="cta-button secondary">Play Voiceover</button>
+                <audio id="voiceover-audio" src="videos/voiceover.mp4" preload="auto"></audio>
             </div>
             <button id="hero-prev-btn" class="hero-nav-btn prev" aria-label="Previous Slide">&lt;</button>
             <button id="hero-next-btn" class="hero-nav-btn next" aria-label="Next Slide">&gt;</button>
@@ -67,8 +76,8 @@
         
         <div class="container mx-auto px-4 py-24 sm:py-32" id="about-section">
             <header class="text-center mb-20">
-                <h1 class="text-5xl md:text-6xl font-bold text-text-light dark:text-text-dark">Melestarikan Surga Dunia</h1>
-                <p class="mt-6 text-lg text-text-secondary-light dark:text-text-secondary-dark max-w-3xl mx-auto">Sebuah komitmen untuk menjaga kekayaan hayati Indonesia, warisan tak ternilai bagi generasi mendatang.</p>
+                <h1 class="text-5xl md:text-6xl font-bold text-text-light dark:text-text-dark">Nusantara</h1>
+                <p class="mt-6 text-lg text-text-secondary-light dark:text-text-secondary-dark max-w-3xl mx-auto">Special thanks to @morsnostra for the voice over</p>
             </header>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-12">
                 <div class="relative group rounded-2xl overflow-hidden info-card image-card">
@@ -76,9 +85,9 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent overlay transition-colors duration-300"></div>
                     <div class="absolute bottom-0 left-0 p-8 text-white">
                         <span class="material-symbols-outlined text-4xl mb-3 text-primary">forest</span>
-                        <h3 class="text-2xl font-semibold mb-2 font-['Playfair_Display']">Ancaman Nyata di Depan Mata</h3>
+                        <h3 class="text-2xl font-semibold mb-2 font-['Playfair_Display']">Tahu Ga?</h3>
                         <p class="text-base leading-relaxed opacity-90">
-                            Indonesia, surga keanekaragaman hayati, kini menghadapi krisis. Banyak spesies endemik seperti Orangutan Sumatera berada di ambang kepunahan, menjadi simbol bisu dari urgensi tindakan konservasi kita.
+                            Kalian tahu ga sih? Di Nusantara ini banyak banget hewan-hewan yang udah terancam punah! Padahal Indonesia terkenal banget dengan keanekaragaman hayatinya. Tapi sayangnya, populasi mereka sudah tidak banyak lagi.
                         </p>
                     </div>
                 </div>
@@ -87,22 +96,22 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent overlay transition-colors duration-300"></div>
                     <div class="absolute bottom-0 left-0 p-8 text-white">
                         <span class="material-symbols-outlined text-4xl mb-3 text-primary">egg</span>
-                        <h3 class="text-2xl font-semibold mb-2 font-['Playfair_Display']">Kearifan Lokal Penjaga Alam</h3>
+                        <h3 class="text-2xl font-semibold mb-2 font-['Playfair_Display']">Untuk Apa?</h3>
                         <p class="text-base leading-relaxed opacity-90">
-                            Konservasi telah mendarah daging dalam budaya kita. Masyarakat adat di Papua menganggap Cenderawasih, sang burung surga, sebagai titisan suci yang wajib dilindungi. Sebuah bukti harmoni antara manusia dan alam.
-                        </p>
+                            Mengapa hal ini penting? Dikarenakan tiap daerah di Indonesia punya cara unik buat menjaga alamnya. Misalnya, masyarakat adat di Kalimantan punya pantangan menebang pohon di sekitar sarang orangutan, atau di Papua, burung cenderawasih dianggap suci dan tidak boleh diburu sama sekali. Itu semua bagian dari kearifan lokal yang udah ada sejak lama.
                     </div>
                 </div>
                 <div class="lg:col-span-2 bg-card-light dark:bg-card-dark p-10 rounded-2xl info-card text-center border-t-4 border-primary hover:bg-gray-50 dark:hover:bg-gray-800/50">
                     <div class="flex flex-col items-center justify-center">
                         <span class="material-symbols-outlined text-5xl text-primary mb-5">volunteer_activism</span>
-                        <h3 class="text-2xl font-bold text-text-light dark:text-text-dark mb-3">Bergabung Dalam Misi Mulia Ini</h3>
+                        <h3 class="text-2xl font-bold text-text-light dark:text-text-dark mb-3">Mari Kita Belajar</h3>
                         <p class="text-lg leading-relaxed max-w-2xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">
-                            Perjalanan melindungi fauna Nusantara adalah panggilan jiwa untuk kita semua. Mari bergandengan tangan, menjadi bagian dari solusi, dan memastikan keindahan ini tetap lestari untuk dinikmati anak cucu kita.
+                            Jadi marilah kita telusuri, apa aja sih? hewan hewan di nusantara yang sudah terancam punah
                         </p>
-                        <button id="view-favorites-btn" class="mt-8 bg-primary text-white font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                            Lihat Favorit Anda (0)
+                        <button id="play-voiceover-btn" class="mt-8 bg-primary text-white font-semibold py-3 px-8 rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                            Play Voiceover
                         </button>
+                        <audio id="voiceover-audio" src="videos/voiceover.mp4" preload="auto"></audio>
                     </div>
                 </div>
             </div>
@@ -137,7 +146,7 @@
             </section>
         </div>
         
-        <div class="quiz-section-wrapper">
+        <div id="games-section" class="quiz-section-wrapper">
             <div class="quiz-container">
                 <h2 class="section-title">Tebak Hewan!</h2>
                 <p id="quiz-question">Fakta menarik tentang hewan akan muncul di sini.</p>
@@ -154,7 +163,7 @@
             </div>
         </div>
         
-        <footer class="bg-background-light dark:bg-background-dark mt-auto">
+        <footer id="socials-section" class="bg-background-light dark:bg-background-dark mt-auto">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24">
                 <div class="text-center mb-16">
                     <h1 class="text-5xl font-black text-gray-900 dark:text-white sm:text-6xl">Our Socials</h1>
@@ -162,7 +171,7 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="bg-white dark:bg-card-dark rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 overflow-hidden">
-                        <div class="h-64 bg-cover bg-center" style="background-image: url('https://via.placeholder.com/400x300');">
+                        <img src="Social/Francesco.jpg" alt="Francesco Alexander" class="h-64 w-full object-cover object-center">
                         </div>
                         <div class="p-8">
                             <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Francesco Alexander</h3>
@@ -189,8 +198,7 @@
                         </div>
                     </div>
                     <div class="bg-white dark:bg-card-dark rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 overflow-hidden">
-                        <div class="h-64 bg-cover bg-center" style="background-image: url('https://via.placeholder.com/400x300');">
-                        </div>
+                        <img src="Social/gunadi.jpg" alt="Gunadi Setiawan" class="w-full object-contain">
                         <div class="p-8">
                             <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Gunadi Setiawan</h3>
                             <div class="space-y-5">

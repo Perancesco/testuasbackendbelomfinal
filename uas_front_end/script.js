@@ -977,4 +977,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         lastScrollTop = st <= 0 ? 0 : st;
     });
+
+    const playVoiceoverBtn = document.getElementById('play-voiceover-btn');
+    const voiceoverAudio = document.getElementById('voiceover-audio');
+
+    if (playVoiceoverBtn && voiceoverAudio) {
+        playVoiceoverBtn.addEventListener('click', () => {
+            if (voiceoverAudio.paused) {
+                voiceoverAudio.play();
+                playVoiceoverBtn.textContent = 'Pause Voiceover';
+            } else {
+                voiceoverAudio.pause();
+                playVoiceoverBtn.textContent = 'Play Voiceover';
+            }
+        });
+
+        voiceoverAudio.addEventListener('ended', () => {
+            playVoiceoverBtn.textContent = 'Play Voiceover';
+        });
+    }
 });
