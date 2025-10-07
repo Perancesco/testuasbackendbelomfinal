@@ -86,7 +86,6 @@ html {
     font-size: 24px;
 }
 
-/* --- LABEL STATUS BARU --- */
 .status-badge {
     display: inline-block;
     padding: 2px 8px;
@@ -150,15 +149,12 @@ body {
   color: var(--primary-text);
 
   background-color: #baf0e0;
-  background-image: url("wave.png"); /* Gambar ombak hijau/putih */
-  background-size: 100% 700px; /* Sesuaikan dengan tinggi gambar */
-  /* Hentikan pengulangan */
+  background-image: url("wave.png"); 
+  background-size: 100% 700px; 
   background-repeat: no-repeat; 
   
-  /* Paksa gambar menutupi seluruh area viewport */
   background-size: cover; 
   
-  /* Pastikan gambar berada di tengah */
   background-position: center center;
 }
 
@@ -232,20 +228,11 @@ body {
     width: 100%;
     padding: 4rem 0;
     text-align: center;
-    /* Hapus atau ganti background-color: #42aee9; */
-
-    /* Ganti properti background-image, size, dan position dengan kode di bawah ini */
     background-image: url('wave2.png');
-    
-    /* Gunakan nilai yang lebih besar dari 100% untuk efek 'zoom' */
-    /* Coba 150% - 180% untuk efek diperbesar (Anda bisa menyesuaikan angkanya) */
-    background-size: 250%; /* Sesuaikan dengan tinggi gambar%; 
-    
+    background-size: 250%; 
     background-repeat: no-repeat;
-    /* Posisikan di tengah agar efek zoom rata di semua sisi */
     background-position: center center; 
-    
-    background-color: #87CFEB; /* Sebagai fallback */
+    background-color: #87CFEB; 
 }
 .map-section-wrapper .section-title { display: inline-block; padding: 0.5rem 2.5rem; border-radius: 30px; box-shadow: var(--shadow); font-size: 2.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);background-color: #87CEFB; }
 .map-section { position: relative; max-width: 1000px; margin: 0 auto; text-align: center; }
