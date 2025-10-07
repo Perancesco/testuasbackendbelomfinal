@@ -283,10 +283,11 @@ body {
     opacity: 0; 
     pointer-events: none; 
     transition: all 0.3s ease; 
+    font-weight: bold; 
 }
 .map-waypoint:hover { transform: translate(-50%, -50%) scale(1.2); background-color: transparent; }
 .map-waypoint:hover::before { animation: none; }
-.map-waypoint:hover::after { opacity: 1; top: -70px; } 
+.map-waypoint:hover::after { opacity: 1; top: -50px; } 
 .waypoint-1 { top: 60%; left: 18%; } /* Sumatra */
 .waypoint-2 { top: 70%; left: 50%; } /* Jawa */
 .waypoint-3 { top: 40%; left: 34%; } /* Kalimantan */
