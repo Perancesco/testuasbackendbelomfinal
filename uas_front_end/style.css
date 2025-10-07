@@ -136,7 +136,7 @@ html {
 :root {
   --bg-color: #ffffff;
   --bg-color-darker: rgb(255, 255, 255);
-  --card-color: #f5e6e6;
+  --card-color: #E0FFFF;
   --primary-text: #074738;
   --secondary-text: #555555;
   --accent-color: #b889e1;
@@ -148,10 +148,22 @@ html {
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
-  background-color: var(--bg-color);
-  background-image: radial-gradient(ellipse at center, var(--bg-color) 0%, var(--bg-color-darker) 100%);
   color: var(--primary-text);
+
+  background-color: #baf0e0;
+  background-image: url("wave.png"); /* Gambar ombak hijau/putih */
+  background-size: 100% 700px; /* Sesuaikan dengan tinggi gambar */
+  /* Hentikan pengulangan */
+  background-repeat: no-repeat; 
+  
+  /* Paksa gambar menutupi seluruh area viewport */
+  background-size: cover; 
+  
+  /* Pastikan gambar berada di tengah */
+  background-position: center center;
 }
+
+
 
 .hero-section { position: relative; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; background-color: #000; text-align: center; }
 .hero-slider-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -177,7 +189,7 @@ body {
     margin: 4rem auto;
     padding: 3rem 2rem;
     text-align: center; 
-    background-color: white;
+    background-color: #E0FFFF;
     border-radius: 1rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
@@ -217,14 +229,32 @@ body {
 .slider-nav-btn.prev { left: -18px; } 
 .slider-nav-btn.next { right: -18px; } 
 
-.map-section-wrapper { width: 100%; padding: 4rem 0; text-align: center; background-color: #42aee9; }
-.map-section-wrapper .section-title { display: inline-block; padding: 0.5rem 2.5rem; border-radius: 30px; box-shadow: var(--shadow); font-size: 2.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+.map-section-wrapper {
+    width: 100%;
+    padding: 4rem 0;
+    text-align: center;
+    /* Hapus atau ganti background-color: #42aee9; */
+
+    /* Ganti properti background-image, size, dan position dengan kode di bawah ini */
+    background-image: url('wave2.png');
+    
+    /* Gunakan nilai yang lebih besar dari 100% untuk efek 'zoom' */
+    /* Coba 150% - 180% untuk efek diperbesar (Anda bisa menyesuaikan angkanya) */
+    background-size: 250%; /* Sesuaikan dengan tinggi gambar%; 
+    
+    background-repeat: no-repeat;
+    /* Posisikan di tengah agar efek zoom rata di semua sisi */
+    background-position: center center; 
+    
+    background-color: #87CFEB; /* Sebagai fallback */
+}
+.map-section-wrapper .section-title { display: inline-block; padding: 0.5rem 2.5rem; border-radius: 30px; box-shadow: var(--shadow); font-size: 2.2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);background-color: #87CEFB; }
 .map-section { position: relative; max-width: 1000px; margin: 0 auto; text-align: center; }
 .map-image { width: 100%; height: auto; display: block; }
 .map-waypoint { 
     position: absolute; 
-    width: 60px; 
-    height: 50px; 
+    width: 80px; 
+    height: 60px; 
     background-image: url('Navigasi.png'); 
     background-size: contain; 
     background-repeat: no-repeat; 
@@ -254,17 +284,17 @@ body {
     pointer-events: none; 
     transition: all 0.3s ease; 
 }
-.map-waypoint:hover { transform: translate(-50%, -50%) scale(1.1); background-color: transparent; }
+.map-waypoint:hover { transform: translate(-50%, -50%) scale(1.2); background-color: transparent; }
 .map-waypoint:hover::before { animation: none; }
 .map-waypoint:hover::after { opacity: 1; top: -70px; } 
-.waypoint-1 { top: 67%; left: 16%; } 
-.waypoint-2 { top: 75%; left: 50%; } 
-.waypoint-3 { top: 51%; left: 34%; } 
-.waypoint-4 { top: 48%; left: 52%; } 
-.waypoint-5 { top: 45%; left: 83%; } 
-.waypoint-6 { top: 66%; left: 34%; } 
-.waypoint-7 { top: 70%; left: 69%; } 
-.waypoint-8 { top: 60%; left: 80%; } 
+.waypoint-1 { top: 60%; left: 18%; } /* Sumatra */
+.waypoint-2 { top: 70%; left: 50%; } /* Jawa */
+.waypoint-3 { top: 40%; left: 34%; } /* Kalimantan */
+.waypoint-4 { top: 36%; left: 55%; } /* Sulawesi */
+.waypoint-5 { top: 30%; left: 90%; } /* Papua */
+.waypoint-6 { top: 58%; left: 38%; } /* Perairan Indonesia / Lokasi Tengah-Barat */
+.waypoint-7 { top: 60%; left: 69%; } /* Bali */
+.waypoint-8 { top: 50%; left: 81%; } /* Nusa Tenggara */ 
 @keyframes ripple-effect { to { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
 
 .view-all-btn {
@@ -286,7 +316,7 @@ body {
 }
 
 .quiz-section-wrapper { width: 100%; padding: 4rem 0; }
-.quiz-container { max-width: 800px; margin: 0 auto; text-align: center; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.quiz-container { max-width: 800px; margin: 0 auto; text-align: center; padding: 2rem; border-radius: 15px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 1rem; background-color: var(--card-color); }
 #quiz-question { font-size: 1.2rem; line-height: 1.6; min-height: 60px; }
 #quiz-extra-hints { width: 100%; margin-top: 1rem; }
 #quiz-extra-hints p { padding: 0.5rem; border-radius: 5px; font-size: 0.9rem; border-left: 3px solid var(--accent-color); text-align: left; }
@@ -327,7 +357,7 @@ footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border-c
 }
 .back-btn { margin-bottom: 2rem; padding: 0.7rem 1.5rem; font-size: 1rem; }
 .location-animal-list-grid { display: grid; grid-template-columns: repeat(auto-fill, 300px); justify-content: center; gap: 2rem; padding-top: 1rem; }
-.location-card { border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
+.location-card { border-radius: 15px; box-shadow: var(--shadow); border: 1px solid var(--border-color); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer;background-color: #E0FFFF; }
 .location-card:hover { transform: translateY(-5px); box-shadow: var(--glow); }
 .location-card .image-wrapper { width: 100%; height: 200px; overflow: hidden; }
 .location-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
