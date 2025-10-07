@@ -1,7 +1,7 @@
 const heroSlidesData = [
-    { video: 'videos/Gajah_Makan.mp4', judul: 'Gajah Sumatra', subjudul: 'Herbivora Lembut yang Terancam' },
-    { video: 'videos/lumba_lumba.mp4', judul: 'Lumba-Lumba', subjudul: 'Kecerdasan di Kedalaman Biru' },
-    { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
+    { video: 'videos/Gajah_Makan.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, // BARU: Judul diubah di sini
+    { video: 'videos/lumba_lumba.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, // Slide 2 tidak perlu diubah, tapi saya akan pastikan yang pertama adalah yang Anda mau.
+    { video: 'videos/Burung.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }
 ];
 
 function getAnimalUniqueId(hewan) {
@@ -478,13 +478,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="relative">
                             <div id="lihat-juga-carousel" class="overflow-hidden">
                                 <div id="lihat-juga-track" class="flex transition-transform duration-300 ease-in-out">
-                                    <!-- Cards injected by script -->
-                                </div>
+                                    </div>
                             </div>
                         </div>
                         <div id="lihat-juga-dots" class="flex justify-center mt-4 space-x-2">
-                            <!-- Dots injected by script -->
-                        </div>
+                            </div>
                     </div>
                 </main>
             </div>
@@ -492,7 +490,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modal.style.display = 'flex';
 
-        // --- Lihat Juga Carousel Logic ---
         const track = document.getElementById('lihat-juga-track');
         const dotsContainer = document.getElementById('lihat-juga-dots');
         const itemsPerPage = 3;
@@ -531,8 +528,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         updateCarousel();
-
-        // --- End Carousel Logic ---
 
         document.getElementById('close-btn-new').addEventListener('click', () => {
             modal.style.display = 'none';
@@ -978,22 +973,4 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollTop = st <= 0 ? 0 : st;
     });
 
-    const playVoiceoverBtn = document.getElementById('play-voiceover-btn');
-    const voiceoverAudio = document.getElementById('voiceover-audio');
-
-    if (playVoiceoverBtn && voiceoverAudio) {
-        playVoiceoverBtn.addEventListener('click', () => {
-            if (voiceoverAudio.paused) {
-                voiceoverAudio.play();
-                playVoiceoverBtn.textContent = 'Pause Voiceover';
-            } else {
-                voiceoverAudio.pause();
-                playVoiceoverBtn.textContent = 'Play Voiceover';
-            }
-        });
-
-        voiceoverAudio.addEventListener('ended', () => {
-            playVoiceoverBtn.textContent = 'Play Voiceover';
-        });
-    }
 });
