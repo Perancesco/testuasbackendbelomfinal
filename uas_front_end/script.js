@@ -301,7 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="detail-group-left">
                     <div class="detail-item-v2"><h4>Status</h4><p>${hewan.statusKonservasi || 'N/A'}</p></div>
                     <div class="detail-item-v2"><h4>Populasi</h4><p>${hewan.populasi || 'N/A'} (${hewan.tahunPencatatan || 'N/A'})</p></div>
-                    <div class="detail-item-v2"><h4>Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
+                    <div class="detail-item-v2"><h4>Tipe Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
+                    <div class="detail-item-v2"><h4>Makanan Utama</h4><p>${hewan.makanan || 'N/A'}</p></div>
+                    <div class="detail-item-v2"><h4>Kebiasaan Unik</h4><p>${hewan.kebiasaanUnik || 'N/A'}</p></div>
                 </div>
                 <div class="detail-item-right">
                     <h4>Kearifan Lokal</h4>
