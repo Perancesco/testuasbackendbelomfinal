@@ -4,9 +4,7 @@ const heroSlidesData = [
     { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
 ];
 
-// Fungsi Utility Favorit
 function getAnimalUniqueId(hewan) {
-    // Menggunakan namaIlmiah sebagai ID yang lebih stabil jika ada
     return hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
 }
 
@@ -17,7 +15,7 @@ function getFavorites() {
 
 function saveFavorites(favorites) {
     localStorage.setItem('animalFavorites', JSON.stringify(favorites));
-    updateFavoriteCount(); // Panggil fungsi update setiap kali favorit diubah
+    updateFavoriteCount();
 }
 
 function isFavorite(animalId) {
@@ -31,17 +29,12 @@ function toggleFavorite(animalId) {
     
     if (isCurrentlyFavorite) {
         delete favorites[animalId];
-        // Hapus notifikasi pop-up
     } else {
         favorites[animalId] = true;
-        // Hapus notifikasi pop-up
     }
     
     saveFavorites(favorites);
-    
-    // TIDAK PERLU REFRESH SELURUH HALAMAN LAGI DI SINI
-    
-    return !isCurrentlyFavorite; // Mengembalikan status baru
+    return !isCurrentlyFavorite;
 }
 
 function updateFavoriteCount() {
@@ -49,8 +42,6 @@ function updateFavoriteCount() {
     const btn = document.getElementById('view-favorites-btn');
     if (btn) {
         btn.textContent = `Lihat Favorit Anda (${count})`;
-        
-        // Tambahkan event listener untuk tombol favorit di halaman utama
         btn.onclick = () => {
             currentFilteredLocation = 'Favorit';
             renderLocationAnimals('Favorit');
@@ -58,21 +49,6 @@ function updateFavoriteCount() {
     }
 }
 
-function scrollToCarousel() {
-    const carouselWrapper = document.getElementById('animal-container-wrapper');
-    const offsetPosition = carouselWrapper.getBoundingClientRect().top + window.pageYOffset;
-    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-}
-
-function scrollToAboutSection() {
-    const aboutSection = document.getElementById('about-section');
-    if (aboutSection) {
-        const offsetPosition = aboutSection.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-    }
-}
-
-// Fungsi Bantuan untuk Label Status Konservasi
 function createStatusBadge(status) {
     let className = 'status-badge';
     let text = status || 'N/A';
@@ -98,6 +74,19 @@ function createStatusBadge(status) {
     return `<span class="${className}">${text}</span>`;
 }
 
+function scrollToCarousel() {
+    const carouselWrapper = document.getElementById('animal-container-wrapper');
+    const offsetPosition = carouselWrapper.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+}
+
+function scrollToAboutSection() {
+    const aboutSection = document.getElementById('about-section');
+    if (aboutSection) {
+        const offsetPosition = aboutSection.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -107,8 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const animalContainer = document.getElementById('animal-container'); 
     const modal = document.getElementById('detail-modal');
-    const modalBody = document.getElementById('modal-body');
-    const closeModalBtn = modal.querySelector('.close-btn');
     const scrollTopBtn = document.getElementById("scrollTopBtn");
     const scrollBottomBtn = document.getElementById("scrollBottomBtn");
     const prevBtn = document.getElementById('prev-btn');
@@ -136,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterTipeMakanan = document.getElementById('filter-tipe-makanan');
     const filterLokasi = document.getElementById('filter-lokasi'); 
     const filterPopulasi = document.getElementById('filter-populasi');
-    const filterFavorite = document.getElementById('filter-favorite'); 
+    const filterFavorite = document.getElementById('filter-favorite');
     const resetFilterBtn = document.getElementById('reset-filter-btn');
     const viewAllLocationsBtn = document.getElementById('view-all-locations-btn'); 
     const scrollToContentBtn = document.getElementById('scroll-to-content-btn'); 
@@ -145,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
     const scrollBtnContainer = document.querySelector('.scroll-buttons'); 
-    const modalFavoriteBtn = document.getElementById('modal-favorite-btn');
     
     let currentFilteredLocation = ''; 
     let currentEditingAnimal = null;
@@ -157,8 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuizAnimal = null;
     let revealedIndexes = [];
     let usedHintTypes = [];
-    let randomCarouselIndex = 0;
-    const randomItemsPerView = 3; 
 
     function createHeroSlides() {
         heroSlidesData.forEach(slideData => {
@@ -195,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function nextHeroSlide() { showHeroSlide((currentHeroIndex + 1) % heroSlidesData.length); }
     function prevHeroSlide() { showHeroSlide((currentHeroIndex - 1 + heroSlidesData.length) % heroSlidesData.length); }
 
-    // KAROSEL: Bintang disebelah nama + Status & Lokasi jadi badge
     function displayCarouselItems(animalArray) {
         animalContainer.innerHTML = '';
         if (animalArray.length === 0) { animalContainer.innerHTML = '<p class="not-found">Data tidak ditemukan.</p>'; return; }
@@ -219,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             imageWrapper.appendChild(img);
 
-            // Tombol Favorit (Real-time update)
             const favBtn = document.createElement('button');
             favBtn.className = `favorite-btn carousel-card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`;
             favBtn.dataset.id = uniqueId;
@@ -241,7 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
             
-            // Kontainer untuk Nama dan Bintang
             const titleContainer = document.createElement('div');
             titleContainer.style.display = 'flex';
             titleContainer.style.alignItems = 'center';
@@ -255,18 +236,15 @@ document.addEventListener('DOMContentLoaded', () => {
             titleContainer.appendChild(h3);
             titleContainer.appendChild(favBtn); 
 
-
             const pDeskripsi = document.createElement('p');
             pDeskripsi.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
             
-            // CONTAINER BADGE STATUS DAN LOKASI
             const badgeContainer = document.createElement('div');
             badgeContainer.className = 'badge-row';
             badgeContainer.innerHTML = `
                 ${createStatusBadge(hewan.statusKonservasi)}
                 <span class="status-badge location">${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</span>
             `;
-
 
             cardContent.appendChild(titleContainer); 
             cardContent.appendChild(pDeskripsi);
@@ -305,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentlyDisplayedAnimals = [...dataHewan];
         currentIndex = 0; 
         displayCarouselItems(currentlyDisplayedAnimals);
-        updateFavoriteCount(); 
+        updateFavoriteCount();
     }
 
     function renderAnswerPlaceholders() {
@@ -416,106 +394,170 @@ document.addEventListener('DOMContentLoaded', () => {
         quizNextBtn.classList.remove('hidden');
     }
 
-    // Logika Tombol Favorit di Modal
-    function updateModalFavoriteButton(hewanId) {
-        const isFav = isFavorite(hewanId);
-        modalFavoriteBtn.dataset.id = hewanId;
-        modalFavoriteBtn.classList.toggle('is-favorite', isFav);
-        modalFavoriteBtn.querySelector('.star-icon').textContent = isFav ? 'star' : 'star_border';
-        modalFavoriteBtn.querySelector('.favorite-tooltip').textContent = isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
-    }
-
-    modalFavoriteBtn.onclick = () => {
-        const animalId = modalFavoriteBtn.dataset.id;
-        toggleFavorite(animalId);
-        updateModalFavoriteButton(animalId);
-        
-        // Memperbarui tampilan di background (karosel atau list) jika perlu
-        if (!locationListPage.classList.contains('hidden') && (filterFavorite.value === 'favorite' || currentFilteredLocation === 'Favorit')) {
-            applyFilters(); 
-        } else {
-            loadAllAnimals(); 
-        }
-    };
-
     function openModal(hewan) {
-        
+        const modalContentWrapper = document.getElementById('modal-content-wrapper');
+        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 6);
         const uniqueId = getAnimalUniqueId(hewan);
-        const randomAnimals = dataHewan.filter(h => getAnimalUniqueId(h) !== uniqueId).sort(() => 0.5 - Math.random()).slice(0, 5);
-        
-        // Update tombol favorit di modal
-        updateModalFavoriteButton(uniqueId);
 
-        
-        modalBody.innerHTML = `
-            <img src="${hewan.gambar || 'images/placeholder.png'}" alt="${hewan.nama || ''}" class="modal-animal-image">
-            <h2>${hewan.nama || 'N/A'}</h2>
-            <p class="nama-ilmiah"><i>${hewan.namaIlmiah || 'N/A'}</i></p> 
-            <p>${hewan.deskripsi || 'N/A'}</p>
-            <div class="detail-grid-v2">
-                <div class="detail-group-left">
-                    <div class="detail-item-v2"><h4>Status</h4><p>${(hewan.statusKonservasi)}</p></div> 
-                    <div class="detail-item-v2"><h4>Lokasi</h4><p>${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</p></div>
-                    <div class="detail-item-v2"><h4>Populasi</h4><p>${hewan.populasi || 'N/A'} (${hewan.tahunPencatatan || 'N/A'})</p></div>
-                    <div class="detail-item-v2"><h4>Tipe Makanan</h4><p>${hewan.tipeMakanan || 'N/A'}</p></div>
-                    <div class="detail-item-v2"><h4>Makanan Utama</h4><p>${hewan.makanan || 'N/A'}</p></div>
-                    <div class="detail-item-v2"><h4>Kebiasaan Unik</h4><p>${hewan.kebiasaanUnik || 'N/A'}</p></div>
-                </div>
-                <div class="detail-item-right">
-                    <h4>Kearifan Lokal</h4>
-                    <p>${hewan.hubunganMasyarakat || 'N/A'}</p>
-                </div>
-            </div>
-            <div class="random-animals">
-                <h3>Lihat Juga</h3>
-                <div class="random-carousel-container">
-                    <div class="random-grid">
-                        ${randomAnimals.map(rand => `
-                            <div class="random-card" data-id="${getAnimalUniqueId(rand)}">
-                                <img src="${rand.gambar}" alt="${rand.nama}">
-                                <p>${rand.nama}</p>
-                            </div>
-                        `).join('')}
+        const getStatusClass = (status) => {
+            switch (status) {
+                case 'Kritis': return 'text-red-500';
+                case 'Terancam': return 'text-orange-500';
+                case 'Rentan': return 'text-yellow-500';
+                case 'Hampir Terancam': return 'text-blue-400';
+                default: return 'text-gray-500';
+            }
+        };
+
+        modalContentWrapper.innerHTML = `
+            <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden">
+                <header class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+                    <div class="relative">
+                        <button id="modal-menu-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
+                            <span class="material-icons">more_vert</span>
+                        </button>
+                        <div id="dropdown-menu-new" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 hidden">
+                            <button id="dropdown-edit-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                                <span class="material-icons mr-2">edit</span> Edit
+                            </button>
+                            <button id="dropdown-delete-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
+                                <span class="material-icons mr-2">delete</span> Hapus
+                            </button>
+                        </div>
                     </div>
-                    <button class="random-nav-btn prev hidden">⮜</button>
-                    <button class="random-nav-btn next hidden">⮞</button>
-                </div>
-                <div class="random-dots-container"></div>
+                    <h1 class="text-xl font-bold text-text-light dark:text-text-dark">Detail Hewan</h1>
+                    <button id="close-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
+                        <span class="material-icons">close</span>
+                    </button>
+                </header>
+                <main class="p-6" style="max-height: 80vh; overflow-y: auto;">
+                    <div class="relative mb-6">
+                        <img alt="${hewan.nama}" class="w-full h-auto object-cover rounded-lg" src="${hewan.gambar}">
+                    </div>
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-text-light dark:text-text-dark">${hewan.nama}</h2>
+                        <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark italic">${hewan.namaIlmiah}</p>
+                        <p class="mt-2 max-w-2xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">${hewan.deskripsi}</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4 text-text-light dark:text-text-dark">Informasi Detail</h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
+                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Status</span>
+                                    <span class="font-semibold ${getStatusClass(hewan.statusKonservasi)}">${hewan.statusKonservasi}</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
+                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Populasi</span>
+                                    <span class="font-semibold text-text-light dark:text-text-dark">${hewan.populasi} (${hewan.tahunPencatatan})</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
+                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Tipe Makanan</span>
+                                    <span class="font-semibold text-text-light dark:text-text-dark">${hewan.tipeMakanan}</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
+                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Makanan Utama</span>
+                                    <span class="font-semibold text-text-light dark:text-text-dark text-right">${hewan.makanan}</span>
+                                </div>
+                                <div class="p-3 bg-background-light dark:bg-background-dark rounded-lg">
+                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Kebiasaan Unik</span>
+                                    <p class="mt-1 font-semibold text-text-light dark:text-text-dark">${hewan.kebiasaanUnik}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg border border-primary/30">
+                            <h3 class="text-xl font-semibold mb-4 text-primary dark:text-blue-300 flex items-center">
+                                <span class="material-icons mr-2">flag</span>
+                                Kearifan Lokal
+                            </h3>
+                            <p class="text-text-secondary-light dark:text-text-secondary-dark">${hewan.hubunganMasyarakat}</p>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <h2 class="text-2xl font-bold text-center mb-8 text-text-light dark:text-text-dark">Lihat Juga</h2>
+                        <div class="relative">
+                            <div id="lihat-juga-carousel" class="overflow-hidden">
+                                <div id="lihat-juga-track" class="flex transition-transform duration-300 ease-in-out">
+                                    <!-- Cards injected by script -->
+                                </div>
+                            </div>
+                        </div>
+                        <div id="lihat-juga-dots" class="flex justify-center mt-4 space-x-2">
+                            <!-- Dots injected by script -->
+                        </div>
+                    </div>
+                </main>
             </div>
         `;
 
         modal.style.display = 'flex';
-        
-        const menuBtn = document.getElementById('modal-menu-btn');
-        const dropdownMenu = document.getElementById('dropdown-menu');
-        const editBtn = document.getElementById('dropdown-edit-btn');
-        const deleteBtn = document.getElementById('dropdown-delete-btn');
 
-        
-        menuBtn.onclick = (e) => {
-            e.stopPropagation(); 
-            dropdownMenu.classList.toggle('hidden');
+        // --- Lihat Juga Carousel Logic ---
+        const track = document.getElementById('lihat-juga-track');
+        const dotsContainer = document.getElementById('lihat-juga-dots');
+        const itemsPerPage = 3;
+        const pages = Math.ceil(randomAnimals.length / itemsPerPage);
+        let currentPage = 0;
+
+        track.innerHTML = randomAnimals.map(rand => `
+            <div class="flex-shrink-0 w-1/3 p-2">
+                <div class="random-card bg-card-light dark:bg-card-dark rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer" data-id="${getAnimalUniqueId(rand)}">
+                    <img alt="${rand.nama}" class="w-full h-48 object-cover" src="${rand.gambar}">
+                    <div class="p-4 text-center">
+                        <h3 class="font-semibold text-text-light dark:text-text-dark">${rand.nama}</h3>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        if (pages > 1) {
+            for (let i = 0; i < pages; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'w-2.5 h-2.5 bg-gray-300 dark:bg-gray-600 rounded-full';
+                dot.addEventListener('click', () => {
+                    currentPage = i;
+                    updateCarousel();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        const updateCarousel = () => {
+            track.style.transform = `translateX(-${currentPage * 100}%)`;
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                dot.classList.toggle('bg-primary', index === currentPage);
+                dot.classList.toggle('bg-gray-300', index !== currentPage);
+            });
         };
 
-        
-        window.addEventListener('click', (e) => {
-            if (dropdownMenu && !dropdownMenu.classList.contains('hidden')) {
-                
-                if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target) && !modalFavoriteBtn.contains(e.target)) {
-                    dropdownMenu.classList.add('hidden');
-                }
-            }
+        updateCarousel();
+
+        // --- End Carousel Logic ---
+
+        document.getElementById('close-btn-new').addEventListener('click', () => {
+            modal.style.display = 'none';
         });
 
-        
-        editBtn.onclick = () => {
-             dropdownMenu.classList.add('hidden');
-             handleEditClick(hewan);
-        };
+        const menuBtn = document.getElementById('modal-menu-btn-new');
+        const dropdown = document.getElementById('dropdown-menu-new');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+        });
 
-        
-        deleteBtn.onclick = function() {
-            dropdownMenu.classList.add('hidden');
+        document.body.addEventListener('click', (e) => {
+            if (menuBtn && !menuBtn.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        }, { once: true });
+
+        document.getElementById('dropdown-edit-btn').addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            handleEditClick(hewan);
+        });
+
+        document.getElementById('dropdown-delete-btn').addEventListener('click', () => {
+            dropdown.classList.add('hidden');
             if (confirm(`Apakah Anda yakin ingin menghapus data ${hewan.nama}?`)) {
                 const animalIndex = dataHewan.findIndex(h => getAnimalUniqueId(h) === uniqueId);
                 if (animalIndex > -1) {
@@ -529,13 +571,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadUniqueLocations();
                 }
             }
-        };
+        });
 
-        
-
-        if (randomAnimals.length > randomItemsPerView) {
-            initRandomCarousel(randomAnimals);
-        }
+        modal.querySelectorAll('.random-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const animalId = card.dataset.id;
+                const nextHewan = dataHewan.find(h => getAnimalUniqueId(h) === animalId);
+                if (nextHewan) {
+                    openModal(nextHewan);
+                }
+            });
+        });
     }
 
     function handleEditClick(hewan) {
@@ -549,10 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.querySelector('[name="nama"]').value = hewan.nama || '';
         form.querySelector('[name="namaIlmiah"]').value = hewan.namaIlmiah || '';
         form.querySelector('[name="deskripsi"]').value = hewan.deskripsi || '';
-        
-        // Pastikan lokasi ditampilkan dengan benar
         form.querySelector('[name="lokasi"]').value = Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || '';
-        
         form.querySelector('[name="statusKonservasi"]').value = hewan.statusKonservasi || '';
         form.querySelector('[name="populasi"]').value = hewan.populasi || '';
         form.querySelector('[name="tahunPencatatan"]').value = hewan.tahunPencatatan || '';
@@ -566,96 +609,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('modal-open');
     }
 
-    
-    function initRandomCarousel(animals) {
-        const randomGrid = modalBody.querySelector('.random-grid');
-        const prevRandomBtn = modalBody.querySelector('.random-nav-btn.prev');
-        const nextRandomBtn = modalBody.querySelector('.random-nav-btn.next');
-        const dotsContainer = modalBody.querySelector('.random-dots-container');
-
-        prevRandomBtn.classList.remove('hidden');
-        nextRandomBtn.classList.remove('hidden');
-
-        randomCarouselIndex = 0; 
-        updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
-
-        prevRandomBtn.onclick = () => {
-            randomCarouselIndex = (randomCarouselIndex - 1 + animals.length);
-            
-            if (randomCarouselIndex >= animals.length) {
-                randomCarouselIndex = animals.length - 1;
-            }
-            if (randomCarouselIndex < 0) {
-                randomCarouselIndex = animals.length - 1;
-            }
-            updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
-        };
-
-        nextRandomBtn.onclick = () => {
-            randomCarouselIndex = (randomCarouselIndex + 1) % animals.length;
-            updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
-        };
-
-        dotsContainer.innerHTML = '';
-        for (let i = 0; i < animals.length; i++) {
-            const dot = document.createElement('span');
-            dot.className = 'random-dot';
-            dot.dataset.index = i;
-            dot.addEventListener('click', () => {
-                randomCarouselIndex = i;
-                updateRandomCarousel(animals, randomGrid, prevRandomBtn, nextRandomBtn, dotsContainer);
-            });
-            dotsContainer.appendChild(dot);
-        }
-    }
-
-    
-    function updateRandomCarousel(animals, randomGrid, prevBtn, nextBtn, dotsContainer) {
-        
-        
-        const itemsToShift = animals.length - randomItemsPerView;
-        const maxIndex = itemsToShift > 0 ? itemsToShift : 0;
-        
-        
-        if (randomCarouselIndex > maxIndex) {
-            randomCarouselIndex = maxIndex;
-        }
-
-        const offset = -randomCarouselIndex * (100 / randomItemsPerView); 
-        randomGrid.style.transform = `translateX(${offset}%)`;
-
-        const dots = dotsContainer.querySelectorAll('.random-dot');
-        dots.forEach((dot, idx) => {
-            
-            dot.classList.toggle('active', idx >= randomCarouselIndex && idx < randomCarouselIndex + randomItemsPerView);
-        });
-
-        
-        if (animals.length <= randomItemsPerView) {
-            prevBtn.classList.add('hidden');
-            nextBtn.classList.add('hidden');
-            dotsContainer.classList.add('hidden');
-        } else {
-            prevBtn.classList.remove('hidden');
-            nextBtn.classList.remove('hidden');
-            dotsContainer.classList.remove('hidden');
-        }
-        
-        
-        prevBtn.disabled = randomCarouselIndex === 0;
-        nextBtn.disabled = randomCarouselIndex >= maxIndex;
-    }
-
-
-    
-
     function toggleMainContent(showLocationList) {
         mainContent.classList.toggle('hidden', showLocationList);
         locationListPage.classList.toggle('hidden', !showLocationList);
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
     
-    // LIST LOKASI: Bintang disebelah nama + Status & Lokasi jadi badge
     function renderLocationAnimals(location, filterName = '', filterMakanan = '', filterLok = '', filterPop = '', filterFav = '') {
         currentFilteredLocation = location;
 
@@ -673,7 +632,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let animalsToFilter = dataHewan;
 
-        // 1. Filter Lokasi Awal (hanya jika bukan "Seluruh Nusantara" atau "Favorit")
         if (location !== 'Seluruh Nusantara' && location !== 'Favorit') {
             animalsToFilter = dataHewan.filter(hewan => 
                 Array.isArray(hewan.lokasi) 
@@ -682,7 +640,6 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         }
 
-        // 2. Terapkan Semua Filter
         const animalsInLocation = animalsToFilter.filter(hewan => {
             const uniqueId = getAnimalUniqueId(hewan);
             const isFav = isFavorite(uniqueId);
@@ -708,14 +665,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         locationAnimalList.innerHTML = '';
         if (animalsInLocation.length === 0) {
-            locationAnimalList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--secondary-text);">Tidak ada data hewan yang ditemukan sesuai filter.</p>';
+            locationAnimalList.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Tidak ada data hewan yang ditemukan sesuai filter.</p>';
             return;
         }
 
         animalsInLocation.forEach(hewan => {
             const uniqueId = getAnimalUniqueId(hewan);
             let isFav = isFavorite(uniqueId);
-            
+
             const card = document.createElement('div');
             card.className = 'location-card';
             card.dataset.id = uniqueId;
@@ -729,56 +686,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageWrapper.style.display = 'none';
             };
             imageWrapper.appendChild(img);
-            
-            // Tombol Favorit (Real-time update)
+
             const favBtn = document.createElement('button');
-            favBtn.className = `favorite-btn card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`; 
+            favBtn.className = `favorite-btn card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`;
             favBtn.dataset.id = uniqueId;
             favBtn.innerHTML = `
                 <span class="material-icons star-icon">${isFav ? 'star' : 'star_border'}</span>
                 <span class="favorite-tooltip">${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
             `;
             
-            // Logika Real-time
             favBtn.onclick = (e) => {
-                e.stopPropagation(); 
+                e.stopPropagation();
                 const newStatus = toggleFavorite(uniqueId);
-                isFav = newStatus; 
+                isFav = newStatus;
                 favBtn.classList.toggle('is-favorite', newStatus);
                 favBtn.querySelector('.star-icon').textContent = newStatus ? 'star' : 'star_border';
                 favBtn.querySelector('.favorite-tooltip').textContent = newStatus ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
-                
-                // Jika filter favorit aktif, refresh tampilan
-                if (filterFav === 'favorite' || currentFilteredLocation === 'Favorit') {
-                    applyFilters(); 
-                } else {
-                    updateFavoriteCount();
+                if (filterFavorite.value === 'favorite' || currentFilteredLocation === 'Favorit') {
+                    applyFilters();
                 }
             };
-
 
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
             
-            // Kontainer untuk Nama dan Bintang
             const titleContainer = document.createElement('div');
             titleContainer.style.display = 'flex';
             titleContainer.style.alignItems = 'center';
-            titleContainer.style.gap = '5px'; 
+            titleContainer.style.gap = '5px';
             titleContainer.style.marginBottom = '0.5rem';
-            
+
             const h3 = document.createElement('h3');
             h3.textContent = hewan.nama || '';
             h3.style.margin = '0';
             
             titleContainer.appendChild(h3);
-            titleContainer.appendChild(favBtn); 
+            titleContainer.appendChild(favBtn);
 
             const p1 = document.createElement('p');
             p1.className = 'short-desc';
             p1.textContent = `${(hewan.deskripsi || '').substring(0, 100)}...`;
 
-            // CONTAINER BADGE STATUS DAN LOKASI
             const badgeContainer = document.createElement('div');
             badgeContainer.className = 'badge-row';
             badgeContainer.innerHTML = `
@@ -789,7 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cardContent.appendChild(titleContainer);
             cardContent.appendChild(p1);
             cardContent.appendChild(badgeContainer);
-            
+
             card.appendChild(imageWrapper);
             card.appendChild(cardContent);
             locationAnimalList.appendChild(card);
@@ -798,16 +746,13 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMainContent(true);
     }
     
-    
     function loadUniqueLocations() {
         const uniqueLocations = new Set();
         dataHewan.forEach(hewan => {
             if (hewan.lokasi) {
-                
                 if (Array.isArray(hewan.lokasi)) {
                     hewan.lokasi.forEach(loc => uniqueLocations.add(loc));
                 } else if (typeof hewan.lokasi === 'string') {
-                    
                     hewan.lokasi.split(',').map(s => s.trim()).filter(s => s).forEach(loc => uniqueLocations.add(loc));
                 }
             }
@@ -841,8 +786,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderLocationAnimals(currentFilteredLocation, name, tipeMakanan, lokasi, populasi, favorite);
     }
 
-    
-
     function resetAddAnimalForm() {
         addAnimalForm.reset();
         addAnimalModal.querySelector('h1').textContent = 'Tambah Hewan Baru';
@@ -875,7 +818,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageUrl = formData.get('gambar');
         const lokasiInput = formData.get('lokasi');
 
-        
         const normalizedLokasi = lokasiInput.includes(',') ? 
                                  lokasiInput.split(',').map(s => s.trim()).filter(s => s) : 
                                  lokasiInput.trim();
@@ -902,20 +844,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         if (currentEditingAnimal) {
-            
             const index = dataHewan.findIndex(h => h === currentEditingAnimal);
             if (index > -1) {
-                
                 dataHewan[index] = { ...dataHewan[index], ...newOrUpdatedData };
                 alert('Data hewan berhasil diperbarui!');
             }
         } else {
-            
             dataHewan.unshift(newOrUpdatedData);
             alert('Hewan baru berhasil ditambahkan!');
         }
 
-        
         addAnimalModal.style.display = 'none';
         resetAddAnimalForm(); 
         document.body.classList.remove('modal-open');
@@ -926,8 +864,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-    
     createHeroSlides();
     showHeroSlide(0);
     setInterval(nextHeroSlide, 7000); 
@@ -935,9 +871,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(showNextItem, 4000);
     generateQuestion();
     loadUniqueLocations(); 
-    updateFavoriteCount(); 
+    updateFavoriteCount();
 
-    
     scrollToContentBtn.addEventListener('click', (e) => {
         e.preventDefault(); 
         scrollToAboutSection();
@@ -952,7 +887,6 @@ document.addEventListener('DOMContentLoaded', () => {
     quizHintBtn.addEventListener('click', showNextHint);
     quizNextBtn.addEventListener('click', generateQuestion);
     
-    
     animalContainer.addEventListener('click', e => {
         const card = e.target.closest('.carousel-item');
         if (!card) return;
@@ -960,7 +894,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const hewan = dataHewan.find(h => getAnimalUniqueId(h) === animalId);
         if (hewan) openModal(hewan);
     });
-    
     
     document.querySelectorAll('.map-waypoint').forEach(waypoint => {
         waypoint.addEventListener('click', (e) => {
@@ -979,7 +912,6 @@ document.addEventListener('DOMContentLoaded', () => {
     viewAllLocationsBtn.addEventListener('click', renderAllAnimals);
 
     backToHomeBtn.addEventListener('click', () => {
-        
         filterNameInput.value = '';
         filterTipeMakanan.value = '';
         filterLokasi.value = '';
@@ -988,7 +920,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         toggleMainContent(false); 
 
-        
         setTimeout(() => {
             const mapWrapper = document.getElementById('map-section-wrapper');
             if (mapWrapper) {
@@ -997,7 +928,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 100); 
     });
-    
     
     filterNameInput.addEventListener('keyup', applyFilters);
     filterTipeMakanan.addEventListener('change', applyFilters);
@@ -1014,7 +944,6 @@ document.addEventListener('DOMContentLoaded', () => {
         applyFilters();
     });
     
-    
     locationAnimalList.addEventListener('click', e => {
         const card = e.target.closest('.location-card');
         if (!card) return;
@@ -1023,46 +952,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hewan) openModal(hewan);
     });
 
-    
-    modalBody.addEventListener('click', e => {
-        const randomCard = e.target.closest('.random-card');
-        if (randomCard) {
-            const animalId = randomCard.dataset.id;
-            const hewan = dataHewan.find(h => h.namaIlmiah === animalId);
-            if (hewan) {
-                openModal(hewan); 
-            }
-        }
-    });
-
-    
     quizAnswerInput.addEventListener('keyup', e => { if (e.key === 'Enter') checkAnswer(); });
     
-    
-    closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', e => { 
         if (e.target === modal) {
             modal.style.display = 'none'; 
         }
     });
     
-    
     scrollTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
     scrollBottomBtn.addEventListener("click", () => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }));
 
-    
     let lastScrollTop = 0;
     const scrollThreshold = 100; 
 
     window.addEventListener('scroll', function() {
         let st = window.pageYOffset || document.documentElement.scrollTop;
         
-        
         if (st > lastScrollTop && st > scrollThreshold) {
-            
             scrollBtnContainer.style.bottom = '20px'; 
         } else {
-            
             scrollBtnContainer.style.bottom = '-100px'; 
         }
         
