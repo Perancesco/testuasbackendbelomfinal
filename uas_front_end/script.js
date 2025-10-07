@@ -4,7 +4,6 @@ const heroSlidesData = [
     { video: 'videos/Burung.mp4', judul: 'Cendrawasih Merah', subjudul: 'Cantik dan Indah' }
 ];
 
-// Fungsi Utility Favorit
 function getAnimalUniqueId(hewan) {
     return hewan.namaIlmiah || `${hewan.nama}-${dataHewan.indexOf(hewan)}`;
 }
@@ -48,6 +47,31 @@ function updateFavoriteCount() {
             renderLocationAnimals('Favorit');
         };
     }
+}
+
+function createStatusBadge(status) {
+    let className = 'status-badge';
+    let text = status || 'N/A';
+    
+    switch (status) {
+        case 'Kritis':
+            className += ' critical';
+            break;
+        case 'Terancam':
+            className += ' endangered';
+            break;
+        case 'Rentan':
+            className += ' vulnerable';
+            break;
+        case 'Hampir Terancam':
+            className += ' near-threatened';
+            break;
+        default:
+            className += ' unknown';
+            break;
+    }
+    
+    return `<span class="${className}">${text}</span>`;
 }
 
 function scrollToCarousel() {
@@ -161,9 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const track = document.createElement('div');
         track.className = 'carousel-track';
         animalArray.forEach(hewan => {
+            const uniqueId = getAnimalUniqueId(hewan);
+            let isFav = isFavorite(uniqueId);
+            
             const card = document.createElement('div');
             card.className = 'carousel-item';
-            const uniqueId = getAnimalUniqueId(hewan);
             card.dataset.id = uniqueId;
 
             const imageWrapper = document.createElement('div');
@@ -176,15 +202,54 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             imageWrapper.appendChild(img);
 
+            const favBtn = document.createElement('button');
+            favBtn.className = `favorite-btn carousel-card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`;
+            favBtn.dataset.id = uniqueId;
+            favBtn.innerHTML = `
+                <span class="material-icons star-icon">${isFav ? 'star' : 'star_border'}</span>
+                <span class="favorite-tooltip">${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+            `;
+            
+            favBtn.onclick = (e) => {
+                e.stopPropagation(); 
+                const newStatus = toggleFavorite(uniqueId);
+                isFav = newStatus; 
+                favBtn.classList.toggle('is-favorite', newStatus);
+                favBtn.querySelector('.star-icon').textContent = newStatus ? 'star' : 'star_border';
+                favBtn.querySelector('.favorite-tooltip').textContent = newStatus ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+                updateFavoriteCount();
+            };
+
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
+            
+            const titleContainer = document.createElement('div');
+            titleContainer.style.display = 'flex';
+            titleContainer.style.alignItems = 'center';
+            titleContainer.style.gap = '5px'; 
+            titleContainer.style.marginBottom = '0.5rem';
+            
             const h3 = document.createElement('h3');
             h3.textContent = hewan.nama || '';
-            const p = document.createElement('p');
-            p.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
-            cardContent.appendChild(h3);
-            cardContent.appendChild(p);
+            h3.style.margin = '0';
+            
+            titleContainer.appendChild(h3);
+            titleContainer.appendChild(favBtn); 
 
+            const pDeskripsi = document.createElement('p');
+            pDeskripsi.textContent = `${(hewan.deskripsi || '').substring(0, 70)}...`;
+            
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'badge-row';
+            badgeContainer.innerHTML = `
+                ${createStatusBadge(hewan.statusKonservasi)}
+                <span class="status-badge location">${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</span>
+            `;
+
+            cardContent.appendChild(titleContainer); 
+            cardContent.appendChild(pDeskripsi);
+            cardContent.appendChild(badgeContainer);
+            
             card.appendChild(imageWrapper);
             card.appendChild(cardContent);
             track.appendChild(card);
@@ -564,6 +629,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         animalsInLocation.forEach(hewan => {
             const uniqueId = getAnimalUniqueId(hewan);
+            let isFav = isFavorite(uniqueId);
+
             const card = document.createElement('div');
             card.className = 'location-card';
             card.dataset.id = uniqueId;
@@ -578,18 +645,56 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             imageWrapper.appendChild(img);
 
+            const favBtn = document.createElement('button');
+            favBtn.className = `favorite-btn card-favorite-btn-in-list ${isFav ? 'is-favorite' : ''}`;
+            favBtn.dataset.id = uniqueId;
+            favBtn.innerHTML = `
+                <span class="material-icons star-icon">${isFav ? 'star' : 'star_border'}</span>
+                <span class="favorite-tooltip">${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}</span>
+            `;
+            
+            favBtn.onclick = (e) => {
+                e.stopPropagation();
+                const newStatus = toggleFavorite(uniqueId);
+                isFav = newStatus;
+                favBtn.classList.toggle('is-favorite', newStatus);
+                favBtn.querySelector('.star-icon').textContent = newStatus ? 'star' : 'star_border';
+                favBtn.querySelector('.favorite-tooltip').textContent = newStatus ? 'Hapus dari Favorit' : 'Tambah ke Favorit';
+                if (filterFavorite.value === 'favorite' || currentFilteredLocation === 'Favorit') {
+                    applyFilters();
+                }
+            };
+
             const cardContent = document.createElement('div');
             cardContent.className = 'card-content';
             
+            const titleContainer = document.createElement('div');
+            titleContainer.style.display = 'flex';
+            titleContainer.style.alignItems = 'center';
+            titleContainer.style.gap = '5px';
+            titleContainer.style.marginBottom = '0.5rem';
+
             const h3 = document.createElement('h3');
             h3.textContent = hewan.nama || '';
+            h3.style.margin = '0';
+            
+            titleContainer.appendChild(h3);
+            titleContainer.appendChild(favBtn);
 
             const p1 = document.createElement('p');
             p1.className = 'short-desc';
             p1.textContent = `${(hewan.deskripsi || '').substring(0, 100)}...`;
 
-            cardContent.appendChild(h3);
+            const badgeContainer = document.createElement('div');
+            badgeContainer.className = 'badge-row';
+            badgeContainer.innerHTML = `
+                ${createStatusBadge(hewan.statusKonservasi)}
+                <span class="status-badge location">${Array.isArray(hewan.lokasi) ? hewan.lokasi.join(', ') : hewan.lokasi || 'N/A'}</span>
+            `;
+
+            cardContent.appendChild(titleContainer);
             cardContent.appendChild(p1);
+            cardContent.appendChild(badgeContainer);
 
             card.appendChild(imageWrapper);
             card.appendChild(cardContent);
