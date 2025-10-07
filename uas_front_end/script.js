@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(hewan) {
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
-        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 3);
+        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 6);
         const uniqueId = getAnimalUniqueId(hewan);
 
         const getStatusClass = (status) => {
@@ -475,15 +475,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="mt-12">
                         <h2 class="text-2xl font-bold text-center mb-8 text-text-light dark:text-text-dark">Lihat Juga</h2>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${randomAnimals.map(rand => `
-                                <div class="random-card bg-card-light dark:bg-card-dark rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300" data-id="${getAnimalUniqueId(rand)}">
-                                    <img alt="${rand.nama}" class="w-full h-48 object-cover" src="${rand.gambar}">
-                                    <div class="p-4 text-center">
-                                        <h3 class="font-semibold text-text-light dark:text-text-dark">${rand.nama}</h3>
-                                    </div>
+                        <div class="relative">
+                            <div id="lihat-juga-carousel" class="overflow-hidden">
+                                <div id="lihat-juga-track" class="flex transition-transform duration-300 ease-in-out">
+                                    <!-- Cards injected by script -->
                                 </div>
-                            `).join('')}
+                            </div>
+                        </div>
+                        <div id="lihat-juga-dots" class="flex justify-center mt-4 space-x-2">
+                            <!-- Dots injected by script -->
                         </div>
                     </div>
                 </main>
@@ -491,6 +491,48 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         modal.style.display = 'flex';
+
+        // --- Lihat Juga Carousel Logic ---
+        const track = document.getElementById('lihat-juga-track');
+        const dotsContainer = document.getElementById('lihat-juga-dots');
+        const itemsPerPage = 3;
+        const pages = Math.ceil(randomAnimals.length / itemsPerPage);
+        let currentPage = 0;
+
+        track.innerHTML = randomAnimals.map(rand => `
+            <div class="flex-shrink-0 w-1/3 p-2">
+                <div class="random-card bg-card-light dark:bg-card-dark rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer" data-id="${getAnimalUniqueId(rand)}">
+                    <img alt="${rand.nama}" class="w-full h-48 object-cover" src="${rand.gambar}">
+                    <div class="p-4 text-center">
+                        <h3 class="font-semibold text-text-light dark:text-text-dark">${rand.nama}</h3>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        if (pages > 1) {
+            for (let i = 0; i < pages; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'w-2.5 h-2.5 bg-gray-300 dark:bg-gray-600 rounded-full';
+                dot.addEventListener('click', () => {
+                    currentPage = i;
+                    updateCarousel();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        const updateCarousel = () => {
+            track.style.transform = `translateX(-${currentPage * 100}%)`;
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                dot.classList.toggle('bg-primary', index === currentPage);
+                dot.classList.toggle('bg-gray-300', index !== currentPage);
+            });
+        };
+
+        updateCarousel();
+
+        // --- End Carousel Logic ---
 
         document.getElementById('close-btn-new').addEventListener('click', () => {
             modal.style.display = 'none';
@@ -504,7 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.body.addEventListener('click', (e) => {
-            if (!menuBtn.contains(e.target) && !dropdown.contains(e.target)) {
+            if (menuBtn && !menuBtn.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
                 dropdown.classList.add('hidden');
             }
         }, { once: true });
