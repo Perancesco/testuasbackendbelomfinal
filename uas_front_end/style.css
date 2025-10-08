@@ -147,7 +147,6 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   color: var(--primary-text);
-
   background-color: #baf0e0;
   background-image: url("wave.png");
   background-size: 100% 700px; 
