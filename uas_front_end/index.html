@@ -8,8 +8,45 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    
-    
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "background-light": "#F8F9FA",
+                        "background-dark": "#1A202C",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#2D3748",
+                        "text-light": "#2D3748",
+                        "text-dark": "#E2E8F0",
+                        "text-secondary-light": "#4A5568",
+                        "text-secondary-dark": "#A0AEC0",
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        'lg': '1rem',
+                        'xl': '1.5rem'
+                    },
+                    boxShadow: {
+                        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            background-color: #F8F9FA;
+        }
+        .dark body {
+            background-color: #1A202C;
+        }
+    </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-display">
@@ -28,7 +65,7 @@
             <div class="hero-content">
                 <h2 id="hero-title" class="hero-title"></h2>
                 <p id="hero-subtitle" class="hero-subtitle"></p>
-                <button id="scroll-to-carousel-btn" class="cta-button">Mulai Jelajah</button>
+                <button class="cta-button" onclick="scrollToCarousel()">Mulai Jelajah</button>
             </div>
             <button id="hero-prev-btn" class="hero-nav-btn prev" aria-label="Previous Slide">&lt;</button>
             <button id="hero-next-btn" class="hero-nav-btn next" aria-label="Next Slide">&gt;</button>
@@ -322,83 +359,5 @@
 
     <script src="data.js"></script>
     <script src="script.js"></script>
-    <template id="modal-template">
-    <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden">
-        <header class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-            <div class="relative">
-                <button id="modal-menu-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
-                    <span class="material-icons">more_vert</span>
-                </button>
-                <div id="dropdown-menu-new" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 hidden">
-                    <button id="dropdown-edit-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
-                        <span class="material-icons mr-2">edit</span> Edit
-                    </button>
-                    <button id="dropdown-delete-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
-                        <span class="material-icons mr-2">delete</span> Hapus
-                    </button>
-                </div>
-            </div>
-            <h1 class="text-xl font-bold text-text-light dark:text-text-dark">Detail Hewan</h1>
-            <button id="close-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
-                <span class="material-icons">close</span>
-            </button>
-        </header>
-        <main class="p-6" style="max-height: 80vh; overflow-y: auto;">
-            <div class="relative mb-6">
-                <img alt="" class="w-full h-auto object-cover rounded-lg" src="">
-            </div>
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-text-light dark:text-text-dark"></h2>
-                <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark italic"></p>
-                <p class="mt-2 max-w-2xl mx-auto text-text-secondary-light dark:text-text-secondary-dark"></p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-xl font-semibold mb-4 text-text-light dark:text-text-dark">Informasi Detail</h3>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Status</span>
-                            <span class="font-semibold"></span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Populasi</span>
-                            <span class="font-semibold text-text-light dark:text-text-dark"></span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Tipe Makanan</span>
-                            <span class="font-semibold text-text-light dark:text-text-dark"></span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Makanan Utama</span>
-                            <span class="font-semibold text-text-light dark:text-text-dark text-right"></span>
-                        </div>
-                        <div class="p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                            <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Kebiasaan Unik</span>
-                            <p class="mt-1 font-semibold text-text-light dark:text-text-dark"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg border border-primary/30">
-                    <h3 class="text-xl font-semibold mb-4 text-primary dark:text-blue-300 flex items-center">
-                        <span class="material-icons mr-2">flag</span>
-                        Kearifan Lokal
-                    </h3>
-                    <p class="text-text-secondary-light dark:text-text-secondary-dark"></p>
-                </div>
-            </div>
-            <div class="mt-12">
-                <h2 class="text-2xl font-bold text-center mb-8 text-text-light dark:text-text-dark">Lihat Juga</h2>
-                <div class="relative">
-                    <div id="lihat-juga-carousel" class="overflow-hidden">
-                        <div id="lihat-juga-track" class="flex transition-transform duration-300 ease-in-out">
-                        </div>
-                    </div>
-                </div>
-                <div id="lihat-juga-dots" class="flex justify-center mt-4 space-x-2">
-                </div>
-            </div>
-        </main>
-    </div>
-</template>
 </body>
 </html>
