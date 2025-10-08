@@ -147,14 +147,11 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   color: var(--primary-text);
-
   background-color: #baf0e0;
-  background-image: url("wave.png"); 
+  background-image: url("wave.png");
   background-size: 100% 700px; 
   background-repeat: no-repeat; 
-  
   background-size: cover; 
-  
   background-position: center center;
 }
 
@@ -695,4 +692,9 @@ body.modal-open {
 .hero-nav a:hover {
     background-color: rgba(0, 0, 0, 0.6);
     color: var(--accent-color);
+}
+
+.image-text-container h3,
+.image-text-container p {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
