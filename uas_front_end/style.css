@@ -1078,6 +1078,11 @@ footer {
   transform: translateY(-0.25rem);
 }
 
+.image-text-container h3,
+.image-text-container p {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
 /* Animal List & Search Controls */
 .title-container {
   display: flex;
@@ -1236,9 +1241,4 @@ footer {
   .quiz-buttons {
     flex-direction: column;
   }
-}
-
-.image-text-container h3,
-.image-text-container p {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
