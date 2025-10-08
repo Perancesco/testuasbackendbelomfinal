@@ -24,7 +24,7 @@ body {
   margin: 0;
   color: var(--primary-text);
   background-color: #baf0e0;
-  background-image: url("wave.png");
+  background-image: url("background/wave.png");
   background-size: 100% 700px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -457,7 +457,7 @@ body.modal-open {
   width: 100%;
   padding: 4rem 0;
   text-align: center;
-  background-image: url('wave2.png');
+  background-image: url('background/wave2.png');
   background-size: 250%;
   background-repeat: no-repeat;
   background-position: center center;
@@ -491,7 +491,7 @@ body.modal-open {
   position: absolute;
   width: 80px;
   height: 80px;
-  background-image: url('Navigasi.png');
+  background-image: url('map/Navigasi.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -697,7 +697,7 @@ body.modal-open {
 footer {
   text-align: center;
   padding: 2rem;
-  background-image: url('wave.png');
+  background-image: url('background/wave.png');
   background-size: cover;
   background-position: center center;
 }
