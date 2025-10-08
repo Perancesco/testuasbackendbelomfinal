@@ -1,6 +1,6 @@
 const heroSlidesData = [
-    { video: 'videos/Gajah_Makan.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, // BARU: Judul diubah di sini
-    { video: 'videos/lumba_lumba.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, // Slide 2 tidak perlu diubah, tapi saya akan pastikan yang pertama adalah yang Anda mau.
+    { video: 'videos/Gajah_Makan.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, 
+    { video: 'videos/lumba_lumba.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, 
     { video: 'videos/Burung.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }
 ];
 
