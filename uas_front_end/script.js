@@ -1,3 +1,33 @@
+tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6",
+                        "background-light": "#F8F9FA",
+                        "background-dark": "#1A202C",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#2D3748",
+                        "text-light": "#2D3748",
+                        "text-dark": "#E2E8F0",
+                        "text-secondary-light": "#4A5568",
+                        "text-secondary-dark": "#A0AEC0",
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        'lg': '1rem',
+                        'xl': '1.5rem'
+                    },
+                    boxShadow: {
+                        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                },
+            },
+        };
+
 const heroSlidesData = [
     { video: 'videos/Gajah_Makan.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, 
     { video: 'videos/lumba_lumba.mp4', judul: 'Ensiklopedia Hewan Langka Nusantara', subjudul: 'Jelajahi Fauna Alam Nusantara' }, 
@@ -132,6 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const addAnimalForm = document.getElementById('add-animal-form');
     const closeAddAnimalModalBtn = addAnimalModal.querySelector('.close-btn');
     const scrollBtnContainer = document.querySelector('.scroll-buttons'); 
+    const scrollToCarouselBtn = document.getElementById('scroll-to-carousel-btn');
+    if (scrollToCarouselBtn) {
+        scrollToCarouselBtn.addEventListener('click', scrollToCarousel);
+    } 
     
     let currentFilteredLocation = ''; 
     let currentEditingAnimal = null;
@@ -396,8 +430,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openModal(hewan) {
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
-        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 6);
-        const uniqueId = getAnimalUniqueId(hewan);
+        const template = document.getElementById('modal-template');
+        const clone = template.content.cloneNode(true);
 
         const getStatusClass = (status) => {
             switch (status) {
@@ -409,89 +443,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        modalContentWrapper.innerHTML = `
-            <div class="bg-card-light dark:bg-card-dark rounded-xl shadow-lg overflow-hidden">
-                <header class="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
-                    <div class="relative">
-                        <button id="modal-menu-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
-                            <span class="material-icons">more_vert</span>
-                        </button>
-                        <div id="dropdown-menu-new" class="absolute left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 hidden">
-                            <button id="dropdown-edit-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
-                                <span class="material-icons mr-2">edit</span> Edit
-                            </button>
-                            <button id="dropdown-delete-btn" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center">
-                                <span class="material-icons mr-2">delete</span> Hapus
-                            </button>
-                        </div>
-                    </div>
-                    <h1 class="text-xl font-bold text-text-light dark:text-text-dark">Detail Hewan</h1>
-                    <button id="close-btn-new" class="text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">
-                        <span class="material-icons">close</span>
-                    </button>
-                </header>
-                <main class="p-6" style="max-height: 80vh; overflow-y: auto;">
-                    <div class="relative mb-6">
-                        <img alt="${hewan.nama}" class="w-full h-auto object-cover rounded-lg" src="${hewan.gambar}">
-                    </div>
-                    <div class="text-center mb-8">
-                        <h2 class="text-3xl font-bold text-text-light dark:text-text-dark">${hewan.nama}</h2>
-                        <p class="text-lg text-text-secondary-light dark:text-text-secondary-dark italic">${hewan.namaIlmiah}</p>
-                        <p class="mt-2 max-w-2xl mx-auto text-text-secondary-light dark:text-text-secondary-dark">${hewan.deskripsi}</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div>
-                            <h3 class="text-xl font-semibold mb-4 text-text-light dark:text-text-dark">Informasi Detail</h3>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Status</span>
-                                    <span class="font-semibold ${getStatusClass(hewan.statusKonservasi)}">${hewan.statusKonservasi}</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Populasi</span>
-                                    <span class="font-semibold text-text-light dark:text-text-dark">${hewan.populasi} (${hewan.tahunPencatatan})</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Tipe Makanan</span>
-                                    <span class="font-semibold text-text-light dark:text-text-dark">${hewan.tipeMakanan}</span>
-                                </div>
-                                <div class="flex justify-between items-center p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Makanan Utama</span>
-                                    <span class="font-semibold text-text-light dark:text-text-dark text-right">${hewan.makanan}</span>
-                                </div>
-                                <div class="p-3 bg-background-light dark:bg-background-dark rounded-lg">
-                                    <span class="font-medium text-text-secondary-light dark:text-text-secondary-dark">Kebiasaan Unik</span>
-                                    <p class="mt-1 font-semibold text-text-light dark:text-text-dark">${hewan.kebiasaanUnik}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg border border-primary/30">
-                            <h3 class="text-xl font-semibold mb-4 text-primary dark:text-blue-300 flex items-center">
-                                <span class="material-icons mr-2">flag</span>
-                                Kearifan Lokal
-                            </h3>
-                            <p class="text-text-secondary-light dark:text-text-secondary-dark">${hewan.hubunganMasyarakat}</p>
-                        </div>
-                    </div>
-                    <div class="mt-12">
-                        <h2 class="text-2xl font-bold text-center mb-8 text-text-light dark:text-text-dark">Lihat Juga</h2>
-                        <div class="relative">
-                            <div id="lihat-juga-carousel" class="overflow-hidden">
-                                <div id="lihat-juga-track" class="flex transition-transform duration-300 ease-in-out">
-                                    </div>
-                            </div>
-                        </div>
-                        <div id="lihat-juga-dots" class="flex justify-center mt-4 space-x-2">
-                            </div>
-                    </div>
-                </main>
-            </div>
-        `;
+        clone.querySelector('[data-modal-id="hewan-gambar"]').src = hewan.gambar;
+        clone.querySelector('[data-modal-id="hewan-gambar"]').alt = hewan.nama;
+        clone.querySelector('[data-modal-id="hewan-nama"]').textContent = hewan.nama;
+        clone.querySelector('[data-modal-id="hewan-nama-ilmiah"]').textContent = hewan.namaIlmiah;
+        clone.querySelector('[data-modal-id="hewan-deskripsi"]').textContent = hewan.deskripsi;
+        const statusEl = clone.querySelector('[data-modal-id="hewan-status"]');
+        statusEl.textContent = hewan.statusKonservasi;
+        statusEl.className = `font-semibold ${getStatusClass(hewan.statusKonservasi)}`;
+        clone.querySelector('[data-modal-id="hewan-populasi"]').textContent = `${hewan.populasi} (${hewan.tahunPencatatan})`;
+        clone.querySelector('[data-modal-id="hewan-tipe-makanan"]').textContent = hewan.tipeMakanan;
+        clone.querySelector('[data-modal-id="hewan-makanan"]').textContent = hewan.makanan;
+        clone.querySelector('[data-modal-id="hewan-kebiasaan-unik"]').textContent = hewan.kebiasaanUnik;
+        clone.querySelector('[data-modal-id="hewan-kearifan-lokal"]').textContent = hewan.hubunganMasyarakat;
+
+        modalContentWrapper.innerHTML = '';
+        modalContentWrapper.appendChild(clone);
+
+        const randomAnimals = dataHewan.filter(h => h.namaIlmiah !== hewan.namaIlmiah).sort(() => 0.5 - Math.random()).slice(0, 6);
+        const uniqueId = getAnimalUniqueId(hewan);
 
         modal.style.display = 'flex';
 
-        const track = document.getElementById('lihat-juga-track');
-        const dotsContainer = document.getElementById('lihat-juga-dots');
+        const track = modalContentWrapper.querySelector('#lihat-juga-track');
+        const dotsContainer = modalContentWrapper.querySelector('#lihat-juga-dots');
         const itemsPerPage = 3;
         const pages = Math.ceil(randomAnimals.length / itemsPerPage);
         let currentPage = 0;
@@ -529,12 +504,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateCarousel();
 
-        document.getElementById('close-btn-new').addEventListener('click', () => {
+        modalContentWrapper.querySelector('[data-modal-id="close-btn"]').addEventListener('click', () => {
             modal.style.display = 'none';
         });
 
-        const menuBtn = document.getElementById('modal-menu-btn-new');
-        const dropdown = document.getElementById('dropdown-menu-new');
+        const menuBtn = modalContentWrapper.querySelector('[data-modal-id="modal-menu-btn"]');
+        const dropdown = modalContentWrapper.querySelector('[data-modal-id="dropdown-menu"]');
         menuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             dropdown.classList.toggle('hidden');
@@ -546,12 +521,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, { once: true });
 
-        document.getElementById('dropdown-edit-btn').addEventListener('click', () => {
+        modalContentWrapper.querySelector('[data-modal-id="dropdown-edit-btn"]').addEventListener('click', () => {
             dropdown.classList.add('hidden');
             handleEditClick(hewan);
         });
 
-        document.getElementById('dropdown-delete-btn').addEventListener('click', () => {
+        modalContentWrapper.querySelector('[data-modal-id="dropdown-delete-btn"]').addEventListener('click', () => {
             dropdown.classList.add('hidden');
             if (confirm(`Apakah Anda yakin ingin menghapus data ${hewan.nama}?`)) {
                 const animalIndex = dataHewan.findIndex(h => getAnimalUniqueId(h) === uniqueId);
@@ -568,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        modal.querySelectorAll('.random-card').forEach(card => {
+        modalContentWrapper.querySelectorAll('.random-card').forEach(card => {
             card.addEventListener('click', () => {
                 const animalId = card.dataset.id;
                 const nextHewan = dataHewan.find(h => getAnimalUniqueId(h) === animalId);
